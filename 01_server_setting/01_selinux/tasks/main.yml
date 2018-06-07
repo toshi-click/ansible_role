@@ -1,0 +1,12 @@
+# ===================
+# SELinuxを無効化する
+# ===================
+- name: setenforce 0
+  shell: "setenforce 0"
+  register: salt
+  ignore_errors: true
+  changed_when: false
+
+- name: Disable setting of SELinux
+  selinux:
+    state: disabled
