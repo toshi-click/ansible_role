@@ -1,0 +1,12 @@
+SOURCE_IP=${SSH_CLIENT%% *}
+# 信頼するIPを指定
+TRUST_IP_LIST="{{ ssh_mail.no_ip }}"
+
+# リストと比較して信頼していないIPからならメール送付
+for HOST in $TRUST_IP_LIST
+do
+    if [ $HOST == $SOURCE_IP ]; then
+      exit 0
+    fi
+done
+echo "\"$USER\" has logged in from $SSH_CLIENT at `date +"%Y/%m/%d %p %I:%M:%S"` to $HOSTNAME " | mail -s "$HOSTNAME sshd login alert" -r root@"$HOSTNAME" root
