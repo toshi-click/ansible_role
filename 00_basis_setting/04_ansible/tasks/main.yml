@@ -1,0 +1,34 @@
+# ansible install
+- name: ansible install
+  package:
+    name: ansible
+    state: present
+
+## hostキーのチェックしないように修正
+- name: /etc/ansible/ansible.cfg
+  copy:
+    src: "ansible.cfg"
+    dest: "/etc/ansible/ansible.cfg"
+    owner: root
+    group: root
+    mode: 0644
+
+# templateエンジンを使うとエラーになるので、改行コードを手動で変更する
+- name: Change the line feed code manually /etc/ansible/ansible.cfg
+  shell: sed -i 's/\r//' /etc/ansible/ansible.cfg
+
+- name: "/root/.ssh作成"
+  file:
+    path: "/root/.ssh"
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: /root/.ssh/config
+  template:
+    src: "ssh_config.j2"
+    dest: "/root/.ssh/config"
+    owner: root
+    group: root
+    mode: 0644
