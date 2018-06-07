@@ -1,0 +1,14 @@
+# yumの接続先を日本限定にする
+- name: /etc/yum/pluginconf.d/fastestmirror.conf
+  template:
+    src: "fastestmirror.conf.j2"
+    dest: "/etc/yum/pluginconf.d/fastestmirror.conf"
+    owner: root
+    group: root
+    mode: 0644
+
+# EPEL インストール -----------------------------------------------------------------------------------------
+- name: epel install
+  package:
+    name: epel-release
+    state: present
