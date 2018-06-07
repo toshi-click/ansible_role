@@ -1,0 +1,6 @@
+# タイムゾーンの設定
+- name: set timezone to Asia/Tokyo
+  shell: unlink /etc/localtime && ln -s /usr/share/zoneinfo/Japan /etc/localtime
+
+# - name: set timezone to Asia/Tokyo
+#  command: timedatectl set-timezone Asia/Tokyo
