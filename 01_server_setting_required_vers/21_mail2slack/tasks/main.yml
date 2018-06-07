@@ -1,0 +1,54 @@
+- name: postfix install
+  package:
+    name: postfix
+    state: latest
+  notify:
+    - enable postfix
+
+- name: aliases set
+  template:
+    src: "aliases.j2"
+    dest: /etc/aliases
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart postfix
+
+- name: newaliases
+  command: newaliases
+  when:
+    - runner is undefined
+
+# root宛メールをslackに通知するシェル配置
+- name: "/export作成"
+  file:
+    path: "/export"
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+
+- name: "/export/bin作成"
+  file:
+    path: "/export/bin"
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+
+- name: to mail required packages install
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - perl-Email-MIME
+    - perl-JSON
+
+- name: mail2slack sh set
+  template:
+    src: "mail2slack.j2"
+    dest: "/export/bin/mail2slack"
+    owner: root
+    group: root
+    mode: 0755
