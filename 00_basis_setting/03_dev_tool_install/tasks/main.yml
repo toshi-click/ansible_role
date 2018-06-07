@@ -1,0 +1,50 @@
+- name: install the 'Development tools' package group
+  package:
+    name: "@Development tools"
+    state: present
+
+# パッケージインストール-----------------------------------------------------------------------------------------
+- name: wget install
+  package:
+    name: wget
+    state: present
+
+- name: tree install
+  package:
+    name: tree
+    state: present
+
+- name: git install
+  package:
+    name: git
+    state: present
+
+- name: mailx install
+  package:
+    name: mailx
+    state: present
+
+- name: sudo install
+  package:
+    name: sudo
+    state: present
+
+- name: net-tools install
+  package:
+    name: net-tools
+    state: present
+
+- name: bind-utils install
+  package:
+    name: bind-utils
+    state: present
+
+- name: htop install
+  package:
+    name: htop
+    state: present
+
+- name: nmap install
+  package:
+    name: nmap
+    state: present
