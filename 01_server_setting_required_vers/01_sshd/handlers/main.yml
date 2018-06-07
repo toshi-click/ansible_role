@@ -1,0 +1,13 @@
+- name: restart sshd
+  service:
+    name: sshd
+    state: restarted
+  when:
+    - runner is undefined
+
+- name: enable sshd
+  service:
+    name: sshd
+    enabled: !!str yes
+  when:
+    - runner is undefined
