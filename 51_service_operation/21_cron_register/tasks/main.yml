@@ -1,0 +1,5 @@
+# 実行したい場合はvarファイルのservice:に下記var足してください
+# service:
+#   cron_file_path: "/export/www/i-tenpo.com/bin/cron/tab/vm/root"
+- name: "{{ service.cron_file_path }} file to cron register"
+  shell: "crontab {{ service.cron_file_path }}"
