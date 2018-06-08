@@ -1,0 +1,13 @@
+- name: restart chronyd
+  service:
+    name: chronyd
+    state: restarted
+  when:
+    - runner is undefined
+
+- name: enable chronyd
+  service:
+    name: chronyd
+    enabled: !!str yes
+  when:
+    - runner is undefined

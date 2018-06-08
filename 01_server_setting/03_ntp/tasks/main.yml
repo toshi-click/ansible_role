@@ -1,0 +1,7 @@
+- name: chrony install
+  package:
+    name: chrony
+    state: present
+  notify:
+    - enable chronyd
+    - restart chronyd
