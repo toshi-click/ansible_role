@@ -1,0 +1,22 @@
+# 実行したい場合はvarファイルのservice:に下記var足してください
+# service:
+#   mysql:
+#     data_dir: "/export/mysql"
+
+- name: "do {{ service.docker.compose_dir }}/docker-compose down"
+  shell: /usr/local/bin/docker-compose down
+  args:
+    chdir: "{{ service.docker.compose_dir }}"
+
+- name: "delete directory {{ service.mysql.data_dir }}"
+  file:
+    path: "{{ service.mysql.data_dir }}"
+    state: absent
+
+- name: "create directory {{ service.mysql.data_dir }}"
+  file:
+    path: "{{ service.mysql.data_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
