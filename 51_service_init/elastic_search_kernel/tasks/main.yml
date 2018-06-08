@@ -1,0 +1,6 @@
+# Linux機では Elastic Search用の設定変更が必要
+- name: vm.max_map_count
+  sysctl:
+    value: 262144
+    state: present
+    ignoreerrors: !!str yes
