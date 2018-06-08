@@ -1,0 +1,33 @@
+# 実行したい場合はvarファイルのservice:に下記var足してください
+# service:
+#   docker:
+#     compose_dir: "/export/www/i-tenpo.com/docker/dev_service"
+- name: restart iptables
+  service:
+    name: iptables
+    state: restarted
+    enabled: !!str yes
+  when:
+    - runner is undefined
+
+- name: restart docker
+  service:
+    name: docker
+    state: restarted
+  when:
+    - runner is undefined
+
+- name: "do {{ service.docker.compose_dir }}/docker-compose down"
+  shell: /usr/local/bin/docker-compose down
+  args:
+    chdir: "{{ service.docker.compose_dir }}"
+
+- name: "do {{ service.docker.compose_dir }}/docker-compose build"
+  shell: /usr/local/bin/docker-compose build
+  args:
+    chdir: "{{ service.docker.compose_dir }}"
+
+- name: "do {{ service.docker.compose_dir }}/docker-compose up -d"
+  shell: /usr/local/bin/docker-compose up -d
+  args:
+    chdir: "{{ service.docker.compose_dir }}"
