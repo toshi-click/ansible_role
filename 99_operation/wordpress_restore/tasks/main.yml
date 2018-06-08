@@ -1,0 +1,66 @@
+# WEBサーバ停止
+- name: "{{ docker.service.dir }} docker-compose stop {{ wordpress_web }}"
+  shell: "/usr/local/bin/docker-compose stop {{ wordpress_web }}"
+  args:
+    chdir: "{{ docker.service.dir }}"
+
+# http://docs.ansible.com/ansible/latest/synchronize_module.html
+# チェックサムを確認し修正時間を保存しない
+# 再帰的に実行し削除されたファイルを削除しない。管理用ユーザで実施
+- name: "rsync {{ wordpress_dir.restoredir }} to {{ wordpress.rootdir }}{{ wordpress_dir.site }}"
+  synchronize:
+    src: "{{ wordpress_dir.restoredir }}"
+    dest: "{{ wordpress.rootdir }}{{ wordpress_dir.site }}"
+    recursive: !!str yes
+    delete: !!str no
+    checksum: !!str yes
+    times: !!str no
+
+- name: "file permission change -r"
+  file:
+    path: "{{ wordpress.rootdir }}{{ wordpress_dir.site }}"
+    owner: www-data
+    group: www-data
+    mode: 0755
+    recurse: !!str yes
+
+- name: "secure wp-config.php"
+  file:
+    path: "{{ wordpress.rootdir }}{{ wordpress_dir.site }}/wp-config.php"
+    owner: www-data
+    group: www-data
+    mode: 0600
+
+# DBサーバ停止
+- name: "{{ docker.service.dir }} docker-compose stop {{ wordpress_db }}"
+  shell: "/usr/local/bin/docker-compose stop {{ wordpress_db }}"
+  args:
+    chdir: "{{ docker.service.dir }}"
+
+# DBサーバのコンテナ削除
+- name: "{{ docker.service.dir }} docker-compose rm -f {{ wordpress_db }}"
+  shell: "/usr/local/bin/docker-compose rm -f {{ wordpress_db }}"
+  args:
+    chdir: "{{ docker.service.dir }}"
+
+# DBサーバのボリューム削除
+- name: "docker volume rm devservice_toshi_wp_db"
+  shell: "/bin/docker volume rm devservice_toshi_wp_db"
+
+# DBサーバ再ビルド
+- name: "{{ docker.service.dir }} docker-compose build {{ wordpress_db }}"
+  shell: "/usr/local/bin/docker-compose build {{ wordpress_db }}"
+  args:
+    chdir: "{{ docker.service.dir }}"
+
+# DBサーバの起動
+- name: "{{ docker.service.dir }} docker-compose up -d {{ wordpress_db }}"
+  shell: "/usr/local/bin/docker-compose up -d {{ wordpress_db }}"
+  args:
+    chdir: "{{ docker.service.dir }}"
+
+# WEBサーバの起動
+- name: "{{ docker.service.dir }} docker-compose up -d {{ wordpress_web }}"
+  shell: "/usr/local/bin/docker-compose up -d {{ wordpress_web }}"
+  args:
+    chdir: "{{ docker.service.dir }}"
