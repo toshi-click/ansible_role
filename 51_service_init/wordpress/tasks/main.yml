@@ -1,0 +1,29 @@
+- name: "create group www-data"
+  group:
+    name: www-data
+    gid: 33
+
+- name: "users exist www-data"
+  user:
+    name: www-data
+    state: present
+    uid: 33
+    group: www-data
+
+- name: "create wordpress root dir {{ wordpress.rootdir }}"
+  file: path="{{ wordpress.rootdir }}" state=directory owner=www-data group=www-data mode=0777
+
+- name: "create wordpress {{ wordpress_dir.site }} dir {{ wordpress.rootdir }}{{ wordpress_dir.site }}"
+  file: path="{{ wordpress.rootdir }}{{ wordpress_dir.site }}" state=directory owner=www-data group=www-data mode=0755
+
+- name: "set {{ wordpress.rootdir }}{{ wordpress_dir.site }}/.htaccess"
+  template: src=".htaccess.j2" dest="{{ wordpress.rootdir }}{{ wordpress_dir.site }}/.htaccess"  owner=www-data group=www-data mode=0755
+
+- name: "set {{ wordpress.rootdir }}{{ wordpress_dir.site }}/wp-admin/.htaccess"
+  template: src="wp-admin/.htaccess.j2" dest="{{ wordpress.rootdir }}{{ wordpress_dir.site }}/wp-admin/.htaccess"  owner=www-data group=www-data mode=0755
+
+- name: "add theme file"
+  copy: src=simplicity2.6.0.9.zip dest="{{ wordpress.rootdir }}{{ wordpress_dir.site }}/wp-content/themes/simplicity2.6.0.9.zip"  owner=www-data group=www-data mode=0755
+
+- name: "secure wp-config.php"
+  file: path="{{ wordpress.rootdir }}{{ wordpress_dir.site }}/wp-config.php" owner=www-data group=www-data mode=0600
