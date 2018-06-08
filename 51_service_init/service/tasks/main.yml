@@ -1,0 +1,35 @@
+- name: "/export作成"
+  file: path="/export" state=directory owner=root group=root mode=0777
+
+- name: "/export/cert作成"
+  file: path="/export/certs" state=directory owner=root group=root mode=0755
+
+- name: "/export/wordpress作成"
+  file: path="/export/wordpress" state=directory owner=root group=root mode=0755
+
+# Deadコンテナの掃除 Dockerがストンと落ちたときにコンテナがDeadになる可能性がある。Deadがあるとコンテナが再生成出来ない
+- name: dead container remove
+  shell: "/export/bin/remove_dead_docker.sh"
+
+# docker サービス
+- name: "{{ docker.service.dir }} docker-compose down"
+  shell: /usr/local/bin/docker-compose down
+  args:
+    chdir: "{{ docker.service.dir }}"
+
+# Deadコンテナの掃除 Dockerがストンと落ちたときにコンテナがDeadになる可能性がある。Deadがあるとコンテナが再生成出来ない
+- name: dead container remove
+  shell: "/export/bin/remove_dead_docker.sh"
+
+- name: restart docker
+  service: name=docker state=restarted
+
+- name: "{{ docker.service.dir }} docker-compose build"
+  shell: /usr/local/bin/docker-compose build
+  args:
+    chdir: "{{ docker.service.dir }}"
+
+- name: "{{ docker.service.dir }} docker-compose up -d --remove-orphans"
+  shell: /usr/local/bin/docker-compose up -d --remove-orphans
+  args:
+    chdir: "{{ docker.service.dir }}"
