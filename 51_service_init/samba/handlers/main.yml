@@ -1,0 +1,27 @@
+- name: restart samba
+  service:
+    name: smb
+    state: restarted
+  when:
+    - runner is undefined
+
+- name: enable samba
+  service:
+    name: smb
+    enabled: !!str yes
+  when:
+    - runner is undefined
+
+- name: restart nmb
+  service:
+    name: nmb
+    state: restarted
+  when:
+    - runner is undefined
+
+- name: enable nmb
+  service:
+    name: nmb
+    enabled: !!str yes
+  when:
+    - runner is undefined

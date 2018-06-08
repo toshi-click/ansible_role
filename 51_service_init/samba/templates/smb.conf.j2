@@ -1,0 +1,75 @@
+[global]
+    workgroup = WORKGROUP
+    server string = {{ host.name }}
+    max protocol = SMB3
+    min protocol = SMB2
+
+    security = user
+    passdb backend = tdbsam
+
+    # 文字コード
+    unix charset = UTF-8
+    dos charset = CP932
+    display charset = CP932
+
+    # アクセス許可IP
+    hosts allow = 127. 172.16. 192.168.
+
+    # ログ関連
+    log file = /var/log/samba/smbd.log
+    max log size = 102400
+    log level = 1
+    syslog = 0
+
+    # セキュリティ関連
+    security = user
+    encrypt passwords = yes
+    invalid users = root
+    guest ok = No
+
+    # MAC PC
+    unix extensions = no
+    wide links = yes
+
+    # プリンター関連(非表示にする)
+    printcap cache time = 0
+    load printers = no
+    printcap name = /dev/null
+
+[share]
+    comment = share
+    path = /export/share/share
+    read only = no
+    create mask = 0664
+    directory mask = 0775
+    valid users = toshi
+    force user = toshi
+    force group = toshi
+
+[private]
+    comment = private
+    path = /export/share/private
+    read only = no
+    create mask = 0664
+    directory mask = 0775
+    valid users = toshi
+    force user = toshi
+    force group = toshi
+
+[abeke]
+    comment = abeke
+    path = /export/share/share/abeke/
+    read only = no
+    create mask = 0664
+    directory mask = 0775
+    valid users = toshi, fujie, yukari
+    force user = toshi
+    force group = toshi
+
+[abeke_readonly]
+    comment = abeke_readonly
+    path = /export/share/share/abeke_readonly/
+    read only = yes
+    valid users = toshi, fujie, yukari
+    force user = toshi
+    force group = toshi
