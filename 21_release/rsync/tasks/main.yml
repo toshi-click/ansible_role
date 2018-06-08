@@ -1,0 +1,15 @@
+# http://docs.ansible.com/ansible/latest/synchronize_module.html
+# チェックサムを確認し修正時間を保存しない
+# 再帰的に実行し削除されたファイルを削除する。管理用ユーザで実施
+- name: "rsync {{ rsync.src }} to {{ rsync.dest }}"
+  synchronize:
+    src: "{{ rsync.src }}"
+    dest: "{{ rsync.dest }}"
+    recursive: !!str yes
+    delete: !!str yes
+    checksum: !!str yes
+    times: !!str no
+    rsync_opts:
+      - "--exclude=.git"
+      - "--exclude=.idea"
+      - "--exclude=.vagrant"
