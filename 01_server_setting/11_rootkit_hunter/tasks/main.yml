@@ -1,0 +1,38 @@
+- name: rkhunter install
+  package:
+    name: rkhunter
+    state: latest
+
+- name: "/var/log/rkhunter directory create"
+  file:
+    path: "/var/log/rkhunter"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+# rootkit hunter 導入 -----------------------------------------------------------------------------------------
+- name: rkhunter conf set
+  template:
+    src: "rkhunter.conf.j2"
+    dest: "/etc/rkhunter.conf"
+    owner: root
+    group: root
+    mode: 0640
+
+- name: rkhunter cron daily
+  template:
+    src: "rkhunter.j2"
+    dest: "/etc/cron.daily/rkhunter"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "rkhunter --update"
+  ignore_errors: true
+  command: rkhunter --update
+
+- name: "rkhunter --propupd"
+  command: rkhunter --propupd
+  when:
+    - runner is undefined
