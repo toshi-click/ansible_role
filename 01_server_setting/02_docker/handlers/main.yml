@@ -1,0 +1,13 @@
+- name: restart docker
+  service:
+    name: docker
+    state: restarted
+  when:
+    - runner is undefined
+
+- name: enable docker
+  service:
+    name: docker
+    enabled: !!str yes
+  when:
+    - runner is undefined
