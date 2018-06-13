@@ -1,0 +1,43 @@
+- name: "create group {{ manage_user.group }}"
+  group:
+    name: "{{ manage_user.group }}"
+    gid: "{{ manage_user.gid }}"
+
+- name: "users exist {{ manage_user.name }}  {{ manage_user.group }}"
+  user:
+    name: "{{ manage_user.name }}"
+    state: present
+    uid: "{{ manage_user.uid }}"
+    password: "{{ manage_user.password }}"
+    group: "{{ manage_user.group }}"
+
+- name: user join to other group
+  user:
+    name: "{{ manage_user.name }}"
+    append: !!str yes
+    groups: "{{ manage_user.subgroups }}"
+
+- name: "directory create /home/{{ manage_user.name }}/.ssh"
+  file:
+    path: "/home/{{ manage_user.name }}/.ssh"
+    state: directory
+    owner: "{{ manage_user.name }}"
+    group: "{{ manage_user.group }}"
+    mode: 0700
+
+- name: "create /home/{{ manage_user.name }}/.ssh/config"
+  template:
+    src: "ssh_config.j2"
+    dest: "/home/{{ manage_user.name }}/.ssh/config"
+    owner: "{{ manage_user.name }}"
+    group: "{{ manage_user.group }}"
+    mode: 0644
+
+# add key
+- name: authorized_keys
+  template:
+    src: "authorized_keys.j2"
+    dest: /home/{{manage_user.name}}/.ssh/authorized_keys
+    owner: "{{ manage_user.name }}"
+    group: "{{ manage_user.group }}"
+    mode: 0600
