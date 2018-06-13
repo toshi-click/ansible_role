@@ -1,0 +1,8 @@
+# suの制限-----------------------------------------------------------------------------------------
+- name: /etc/pam.d/su
+  template:
+    src: "su.j2"
+    dest: "/etc/pam.d/su"
+    owner: root
+    group: root
+    mode: 0644
