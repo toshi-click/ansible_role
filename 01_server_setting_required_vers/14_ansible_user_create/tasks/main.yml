@@ -1,0 +1,43 @@
+- name: "create group {{ ansible_user.group }}"
+  group:
+    name: "{{ ansible_user.group }}"
+    gid: "{{ ansible_user.gid }}"
+
+- name: "users exist {{ ansible_user.name }}  {{ ansible_user.group }}"
+  user:
+    name: "{{ ansible_user.name }}"
+    state: present
+    uid: "{{ ansible_user.uid }}"
+    password: "{{ ansible_user.password }}"
+    group: "{{ ansible_user.group }}"
+
+- name: user join to other group
+  user:
+    name: "{{ ansible_user.name }}"
+    append: !!str yes
+    groups: "{{ ansible_user.subgroups }}"
+
+- name: "directory create /home/{{ ansible_user.name }}/.ssh"
+  file:
+    path: "/home/{{ ansible_user.name }}/.ssh"
+    state: directory
+    owner: "{{ ansible_user.name }}"
+    group: "{{ ansible_user.group }}"
+    mode: 0700
+
+- name: "create /home/{{ ansible_user.name }}/.ssh/config"
+  template:
+    src: "ssh_config.j2"
+    dest: "/home/{{ ansible_user.name }}/.ssh/config"
+    owner: "{{ ansible_user.name }}"
+    group: "{{ ansible_user.group }}"
+    mode: 0644
+
+# add key
+- name: authorized_keys
+  template:
+    src: "authorized_keys.j2"
+    dest: /home/{{ansible_user.name}}/.ssh/authorized_keys
+    owner: "{{ ansible_user.name }}"
+    group: "{{ ansible_user.group }}"
+    mode: 0600
