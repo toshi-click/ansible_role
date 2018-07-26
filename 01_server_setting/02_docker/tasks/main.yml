@@ -21,10 +21,10 @@
     name: yum-utils
     state: present
 
-- name: Add Docker GPG key.
-  rpm_key:
-    key: https://download.docker.com/linux/centos/gpg
-    state: present
+#- name: Add Docker GPG key.
+#  rpm_key:
+#    key: https://download.docker.com/linux/centos/gpg
+#    state: present
 
 - name: Add Docker CE repository
   get_url:
