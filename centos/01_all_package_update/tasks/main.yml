@@ -1,0 +1,4 @@
+# パッケージアップデート------
+- name: packages update
+  package: name=* state=latest
+

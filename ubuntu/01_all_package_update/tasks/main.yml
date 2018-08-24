@@ -1,3 +1,4 @@
 # パッケージアップデート------
 - name: packages update
-  package: name=* state=latest
+  apt: update_cache=yes
+
