@@ -1,0 +1,11 @@
+# パッケージアップデート------
+- name: packages update RH CentOS
+  package:
+    name: *
+    state: latest
+  when: "ansible_os_family == 'RedHat'"
+
+# パッケージアップデート------
+- name: packages update Debian Ubuntu
+  apt: update_cache="yes"
+  when: "ansible_os_family == 'Debian'"

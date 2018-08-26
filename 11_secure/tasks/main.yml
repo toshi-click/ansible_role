@@ -1,3 +1,21 @@
+# suの制限-----------------------------------------------------------------------------------------
+- name: /etc/pam.d/su
+  template:
+    src: "su.j2"
+    dest: "/etc/pam.d/su"
+    owner: root
+    group: root
+    mode: 0644
+
+# sudo の設定
+- name: "/etc/hosts.allow"
+  template:
+    src: "sudoers.j2"
+    dest: "/etc/hosts.allow"
+    owner: root
+    group: root
+    mode: 0440
+
 # hosts.allow -----------------------------------------------------------------------------------------
 - name: "/etc/hosts.allow"
   template:

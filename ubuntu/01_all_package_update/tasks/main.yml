@@ -1,4 +1,0 @@
-# パッケージアップデート------
-- name: packages update
-  apt: update_cache=yes
-

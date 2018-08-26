@@ -2,6 +2,7 @@
   package:
     name: "@Development tools"
     state: present
+  when: "ansible_os_family == 'RedHat'"
 
 # パッケージインストール-----------------------------------------------------------------------------------------
 - name: wget install
