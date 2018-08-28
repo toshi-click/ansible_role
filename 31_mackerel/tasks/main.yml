@@ -17,7 +17,7 @@
     state: present
 
 - name: Configure /etc/mackerel-agent/mackerel-agent.conf
-  command: mackerel-agent init -apikey="cramkQJkJ3niNMif6BAiAj9F3Nh8LpFpW3zCX9B84BLK"
+  command: mackerel-agent init -apikey="{{ monitoring.mackerelKey }}"
 
 - name: Start mackerel-agent
   service:

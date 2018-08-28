@@ -1,7 +1,7 @@
 # パッケージアップデート------
 - name: packages update RH CentOS
   package:
-    name: *
+    name: "*"
     state: latest
   when: "ansible_os_family == 'RedHat'"
 

@@ -1,0 +1,4 @@
+- name: "root user password change"
+  user:
+    name: "{{ root_user.name }}"
+    password: "{{ root_user.password }}"
