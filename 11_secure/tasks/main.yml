@@ -8,10 +8,10 @@
     mode: 0644
 
 # sudo の設定
-- name: "/etc/hosts.allow"
+- name: "/etc/sudoers"
   template:
     src: "sudoers.j2"
-    dest: "/etc/hosts.allow"
+    dest: "/etc/sudoers"
     owner: root
     group: root
     mode: 0440

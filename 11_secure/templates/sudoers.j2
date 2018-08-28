@@ -99,7 +99,7 @@ root    ALL=(ALL)       ALL
 %wheel  ALL=(ALL)       ALL
 
 ## Same thing without a password
-{% if securty.sudo.nopassword == true %}
+{% if security.sudo.nopassword == "true" %}
 %wheel        ALL=(ALL)       NOPASSWD: ALL
 {% else %}
 # %wheel        ALL=(ALL)       NOPASSWD: ALL
