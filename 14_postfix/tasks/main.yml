@@ -4,6 +4,44 @@
     state: latest
   notify:
   - enable postfix
+  - restart postfix
+
+# root宛メールをslackに通知するシェル配置
+- name: "create directory{{ directory.root_dir }}"
+  file:
+    path: "{{ directory.root_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+  when: send_slack == 'true'
+
+- name: "create directory{{ directory.root_dir }}/bin"
+  file:
+    path: "{{ directory.root_dir }}/bin"
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+  when: send_slack == 'true'
+
+- name: to mail required packages install
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+  - perl-Email-MIME
+  - perl-JSON
+  when: send_slack == 'true'
+
+- name: mail2slack sh set
+  template:
+    src: "mail2slack.j2"
+    dest: "{{ directory.root_dir }}/bin/mail2slack"
+    owner: root
+    group: root
+    mode: 0755
+  when: send_slack == 'true'
 
 - name: aliases set
   template:
@@ -19,39 +57,6 @@
   command: newaliases
   when:
   - runner is undefined
-
-# root宛メールをslackに通知するシェル配置
-- name: "/export作成"
-  file:
-    path: "/export"
-    state: directory
-    owner: root
-    group: root
-    mode: 0777
-
-- name: "/export/bin作成"
-  file:
-    path: "/export/bin"
-    state: directory
-    owner: root
-    group: root
-    mode: 0777
-
-- name: to mail required packages install
-  package:
-    name: "{{ item }}"
-    state: latest
-  with_items:
-  - perl-Email-MIME
-  - perl-JSON
-
-- name: mail2slack sh set
-  template:
-    src: "mail2slack.j2"
-    dest: "/export/bin/mail2slack"
-    owner: root
-    group: root
-    mode: 0755
 
 
 # ssh ログインでメール送る設定
