@@ -1,0 +1,62 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use utf8;
+use JSON;
+use Email::MIME;
+
+$ENV{'PATH'} = '/bin:/usr/bin';
+delete @ENV{'IFS', 'CDPATH', 'ENV', 'BASH_ENV'};
+
+my $curl     = '/usr/bin/curl -s --data-urlencode';
+my $hookurl = '{{ slack.web_hook_url }}';
+my $channel  = '#{{ slack.channel }}',
+my $username = '{{ host.name }} bot',
+my $iconemoji  = '{{ slack.icon }}',
+
+my $rawmail = join '', <STDIN>;
+
+my $mail = &parse_mail($rawmail);
+my %json= (
+  'username'    => "$username",
+  'icon_emoji'    => "$iconemoji",
+  'channel' => "$channel",
+  'attachments' => [
+    {
+      "pretext" => "「$$mail{from}」からメールが届きました。",
+      "title"   => "$$mail{subj}",
+      "text"    => "$$mail{body}"
+    }
+  ]
+);
+
+my $payload = &escape_html( 'payload=' . encode_json( \%json ) );
+
+my $cmd=$curl . " '" . $payload . "' " . $hookurl;
+
+system( "$cmd" );
+
+exit;
+
+sub parse_mail {
+  my ($rawmail) = @_;
+  my $parsedmail = Email::MIME->new($rawmail);
+  my %hash = (
+    "rcpt" => scalar($parsedmail->header('Delivered-To')),
+    "from" => scalar($parsedmail->header('From')),
+    "subj" => scalar($parsedmail->header('Subject')),
+    "body" => $parsedmail->body_str
+  );
+  $hash{body} =~ s/\r\n?|\n\r?/\n/g;
+  return(\%hash);
+}
+
+sub escape_html {
+  my ($str) = @_;
+  $str =~ s/&/&amp;/g;
+  $str =~ s/</&lt;/g;
+  $str =~ s/>/&gt;/g;
+  $str =~ s/'/&#39;/g;
+  return $str;
+}
