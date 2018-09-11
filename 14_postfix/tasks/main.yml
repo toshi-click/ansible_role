@@ -6,42 +6,15 @@
   - enable postfix
   - restart postfix
 
-# root宛メールをslackに通知するシェル配置
-- name: "create directory{{ directory.root_dir }}"
-  file:
-    path: "{{ directory.root_dir }}"
-    state: directory
-    owner: root
-    group: root
-    mode: 0777
-  when: send_slack == 'true'
-
-- name: "create directory{{ directory.root_dir }}/bin"
-  file:
-    path: "{{ directory.root_dir }}/bin"
-    state: directory
-    owner: root
-    group: root
-    mode: 0777
-  when: send_slack == 'true'
-
-- name: to mail required packages install
-  package:
-    name: "{{ item }}"
-    state: latest
-  with_items:
-  - perl-Email-MIME
-  - perl-JSON
-  when: send_slack == 'true'
-
-- name: mail2slack sh set
+- name: main.cf set
   template:
-    src: "mail2slack.j2"
-    dest: "{{ directory.root_dir }}/bin/mail2slack"
+    src: "main.cf.j2"
+    dest: /etc/postfix/main.cf
     owner: root
     group: root
-    mode: 0755
-  when: send_slack == 'true'
+    mode: 0644
+  notify:
+  - restart postfix
 
 - name: aliases set
   template:
@@ -51,13 +24,43 @@
     group: root
     mode: 0644
   notify:
+  - newaliases
   - restart postfix
 
-- name: newaliases
-  command: newaliases
-  when:
-  - runner is undefined
+# root宛メールをslackに通知するシェル配置
+- block:
+  - name: "create directory{{ directory.root_dir }}"
+    file:
+      path: "{{ directory.root_dir }}"
+      state: directory
+      owner: root
+      group: root
+      mode: 0777
 
+  - name: "create directory{{ directory.root_dir }}/bin"
+    file:
+      path: "{{ directory.root_dir }}/bin"
+      state: directory
+      owner: root
+      group: root
+      mode: 0777
+
+  - name: to mail required packages install
+    package:
+      name: "{{ item }}"
+      state: latest
+    with_items:
+    - perl-Email-MIME
+    - perl-JSON
+
+  - name: mail2slack sh set
+    template:
+      src: "mail2slack.j2"
+      dest: "{{ directory.root_dir }}/bin/mail2slack"
+      owner: root
+      group: root
+      mode: 0755
+  when: send_slack == 'true'
 
 # ssh ログインでメール送る設定
 - name: sshrc
@@ -67,3 +70,4 @@
     owner: root
     group: root
     mode: 0755
+  when: ssh_mail.send == 'true'
