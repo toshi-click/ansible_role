@@ -72,5 +72,7 @@ message_size_limit = 102400000
 # err-[情報の暗号化した文字列]@[ドメイン]のようなリターンパスであった場合に正規表現で検知してプログラムを起動する
 virtual_alias_maps = regexp:/etc/postfix/virtual_maps
 local_recipient_maps = regexp:/etc/postfix/virtual_maps
+# Dockerコンテナ内からの転送メールを受け取れる設定
+resolve_numeric_domain = yes
 # config end -------------------
 
