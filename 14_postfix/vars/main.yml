@@ -1,4 +1,0 @@
-send_slack: "true"
-ssh_mail:
-  no_ip: "127.0.0.1"
-  send: "true"

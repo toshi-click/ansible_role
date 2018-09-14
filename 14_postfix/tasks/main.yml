@@ -27,6 +27,16 @@
   - newaliases
   - restart postfix
 
+- name: virtual_maps set
+  template:
+    src: "virtual_maps.j2"
+    dest: /etc/postfix/virtual_maps
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+  - restart postfix
+
 # root宛メールをslackに通知するシェル配置
 - block:
   - name: "create directory{{ directory.root_dir }}"
@@ -70,4 +80,3 @@
     owner: root
     group: root
     mode: 0755
-  when: ssh_mail.send == 'true'

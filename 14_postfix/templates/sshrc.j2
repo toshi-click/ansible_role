@@ -1,3 +1,4 @@
+{% if ssh_mail.send == "true" %}
 SOURCE_IP=${SSH_CLIENT%% *}
 # 信頼するIPを指定
 TRUST_IP_LIST="{{ ssh_mail.no_ip }}"
@@ -10,3 +11,4 @@ do
     fi
 done
 echo "\"$USER\" has logged in from $SSH_CLIENT at `date +"%Y/%m/%d %p %I:%M:%S"` to $HOSTNAME " | mail -s "$HOSTNAME sshd login alert" -r root@"$HOSTNAME" root
+{% endif %}
