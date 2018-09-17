@@ -1,2 +1,0 @@
-- name: "{{ service.docker.wp_contener }} mail_config.sh"
-  shell: "docker exec {{ service.docker.wp_contener }} bash /var/www/mail_config.sh"
