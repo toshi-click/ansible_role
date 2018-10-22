@@ -7,18 +7,14 @@
     name: iptables
     state: restarted
     enabled: !!str yes
-  when:
-    - runner is undefined
 
 - name: restart docker
   service:
     name: docker
     state: restarted
-  when:
-    - runner is undefined
 
-- name: "do {{ service.docker.compose_dir }}/docker-compose down"
-  shell: /usr/local/bin/docker-compose down
+- name: "do {{ service.docker.compose_dir }}/docker-compose pull"
+  shell: /usr/local/bin/docker-compose pull
   args:
     chdir: "{{ service.docker.compose_dir }}"
 
@@ -27,7 +23,12 @@
   args:
     chdir: "{{ service.docker.compose_dir }}"
 
-- name: "do {{ service.docker.compose_dir }}/docker-compose up -d"
-  shell: /usr/local/bin/docker-compose up -d
+- name: "do {{ service.docker.compose_dir }}/docker-compose down"
+  shell: /usr/local/bin/docker-compose down
+  args:
+    chdir: "{{ service.docker.compose_dir }}"
+
+- name: "do {{ service.docker.compose_dir }}/docker-compose up -d --force-recreate"
+  shell: /usr/local/bin/docker-compose up -d --force-recreate
   args:
     chdir: "{{ service.docker.compose_dir }}"
