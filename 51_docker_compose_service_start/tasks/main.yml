@@ -21,3 +21,7 @@
   shell: /usr/local/bin/docker-compose up -d --force-recreate
   args:
     chdir: "{{ service.docker.compose_dir }}"
+
+# 未使用なコンテナ・イメージ・ボリュームを削除
+- name: "do docker clean [docker system prune]"
+  shell: /bin/docker system prune
