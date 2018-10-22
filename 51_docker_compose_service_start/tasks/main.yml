@@ -2,17 +2,6 @@
 # service:
 #   docker:
 #     compose_dir: "/export/www/i-tenpo.com/docker/dev_service"
-- name: restart iptables
-  service:
-    name: iptables
-    state: restarted
-    enabled: !!str yes
-
-- name: restart docker
-  service:
-    name: docker
-    state: restarted
-
 - name: "do {{ service.docker.compose_dir }}/docker-compose pull"
   shell: /usr/local/bin/docker-compose pull
   args:
