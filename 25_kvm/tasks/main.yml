@@ -28,15 +28,3 @@
   package:
     name: bridge-utils
     state: present
-
-# virtのデフォルト設定を削除する
-- name: Delete virt default net
-  shell: virsh net-destroy default
-
-# virtのデフォルト設定を削除する
-- name: Delete virt default
-  shell: virsh net-undefine default
-
-# 仮想ブリッジの自動起動抑止
-- name: Disable virt default net autostart
-  shell: virsh net-autostart default --disable
