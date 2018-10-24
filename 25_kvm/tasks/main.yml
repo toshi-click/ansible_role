@@ -6,6 +6,11 @@
     - enable libvirt
     - restart libvirt
 
+- name: disable libvirtd
+  service:
+    name: libvirtd
+    enabled: !!str no
+
 # GUI操作用にvirt-managerを入れる
 - name: virt-manager install
   package:
@@ -24,33 +29,14 @@
     name: bridge-utils
     state: present
 
+# virtのデフォルト設定を削除する
+- name: Delete virt default net
+  shell: virsh net-destroy default
 
+# virtのデフォルト設定を削除する
+- name: Delete virt default
+  shell: virsh net-undefine default
 
-## hostキーのチェックしないように修正
-- name: /etc/ansible/ansible.cfg
-  copy:
-    src: "ansible.cfg"
-    dest: "/etc/ansible/ansible.cfg"
-    owner: root
-    group: root
-    mode: 0644
-
-# templateエンジンを使うとエラーになるので、改行コードを手動で変更する
-- name: Change the line feed code manually /etc/ansible/ansible.cfg
-  shell: sed -i 's/\r//' /etc/ansible/ansible.cfg
-
-- name: "/root/.ssh作成"
-  file:
-    path: "/root/.ssh"
-    state: directory
-    owner: root
-    group: root
-    mode: 0700
-
-- name: /root/.ssh/config
-  template:
-    src: "ssh_config.j2"
-    dest: "/root/.ssh/config"
-    owner: root
-    group: root
-    mode: 0644
+# 仮想ブリッジの自動起動抑止
+- name: Disable virt default net autostart
+  shell: virsh net-autostart default --disable
