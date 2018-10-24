@@ -23,8 +23,8 @@ manpage_directory = /usr/share/man
 
 # config start -----------------
 # ホスト名を記述
-myhostname = {{ host.name }}
-mydomain = {{ host.name }}
+myhostname = host.{{ host.name }}
+mydomain = host.{{ host.name }}
 myorigin = $myhostname
 
 # localhostだと自分自信のメールだけ許可
