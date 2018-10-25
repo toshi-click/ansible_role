@@ -6,11 +6,6 @@
     - enable libvirt
     - restart libvirt
 
-- name: disable libvirtd
-  service:
-    name: libvirtd
-    enabled: !!str no
-
 # GUI操作用にvirt-managerを入れる
 - name: virt-manager install
   package:
