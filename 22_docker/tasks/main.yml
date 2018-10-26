@@ -68,19 +68,16 @@
     - enable docker
     - restart docker
 
-# Docker comporse-----------------------------------------------------------------------------------------
-# - name: "docker-compose ダウンロード"
-#  get_url: url="https://github.com/docker/compose/releases/download/1.14.0/docker-compose-{{ansible_system}}-{{ansible_machine}}" dest=/usr/local/bin/docker-compose
-#  tags: docker
-- name: "docker-compose set"
-  copy:
-    src: "docker-compose"
+- name: "docker-compose Download"
+  get_url:
+    url: "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-{{ansible_system}}-{{ansible_machine}}"
     dest: /usr/local/bin/docker-compose
     owner: root
     group: root
     mode: 0755
+  tags: docker
 
-- name: "docker-compose インストール"
+- name: "docker-compose permission set"
   file:
     path: /usr/local/bin/docker-compose
     owner: root
