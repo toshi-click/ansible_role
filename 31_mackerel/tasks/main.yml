@@ -25,7 +25,17 @@
     state: started
     enabled: yes
 
-- name: Install yum mackerel plugin
+- name: Install yum mackerel plugins
   yum:
     name: mackerel-check-plugins
+    state: present
+
+- name: Install yum mackerel-check-plugins
+  yum:
+    name: mackerel-check-plugins
+    state: present
+
+- name: Install yum mkr
+  yum:
+    name: mkr
     state: present
