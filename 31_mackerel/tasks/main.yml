@@ -24,3 +24,8 @@
     name: mackerel-agent
     state: started
     enabled: yes
+
+- name: Install yum mackerel plugin
+  yum:
+    name: mackerel-check-plugins
+    state: present
