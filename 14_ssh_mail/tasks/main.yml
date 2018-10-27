@@ -1,8 +1,0 @@
-# ssh ログインでメール送る設定
-- name: sshrc
-  template:
-    src: "sshrc.j2"
-    dest: "/etc/ssh/sshrc"
-    owner: root
-    group: root
-    mode: 0755
