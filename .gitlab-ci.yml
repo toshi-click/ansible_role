@@ -1,0 +1,23 @@
+# CI Lint tool
+# https://gitlab.teamhack.io/ci/lint
+---
+stages:
+  - lint
+
+cache:
+  # ジョブ毎にキャッシュを共有する設定
+  key: "$CI_JOB_NAME"
+  untracked: true
+
+## filelint 改行コードを見たりする
+filelint:
+  stage: lint
+  image: toshiclick/gitlab-ci-ansible-centos
+  script:
+  - yum install -y golang
+  - echo export GOROOT=/usr/lib/golang >> ~/.bash_profile
+  - echo export GOPATH=/usr/share/gocode >> ~/.bash_profile
+  - echo export PATH=$PATH:$GOROOT/bin:$GOPATH/bin >> ~/.bash_profile
+  - source ~/.bash_profile
+  - go get -u github.com/synchro-food/filelint
+  - /usr/share/gocode/bin/filelint .
