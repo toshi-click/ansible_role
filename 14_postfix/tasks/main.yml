@@ -72,6 +72,14 @@
       mode: 0755
   when: send_slack == 'true'
 
+- name: "create directory /etc/ssh/"
+  file:
+    path: "/etc/ssh/"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
 # ssh ログインでメール送る設定
 - name: sshrc
   template:
