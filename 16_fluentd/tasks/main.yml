@@ -8,7 +8,11 @@
   command: bash /usr/local/src/install-redhat-td-agent3.sh
   notify:
   - restart fluentd
-  - enable fluentd
+
+- name: enable fluentd
+  service:
+    name: td-agent
+    enabled: yes
 
 - name: custom fluentd Plugin set
   template:
