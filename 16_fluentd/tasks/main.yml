@@ -52,3 +52,40 @@
     mode: 0644
   notify:
   - restart fluentd
+
+- name: "td agent by can read to logrotate setting"
+  template:
+    src: "syslog.j2"
+    dest: /etc/logrotate.d/syslog
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "td agent by can read to logrotate setting"
+  template:
+    src: "syslog.j2"
+    dest: /etc/logrotate.d/syslog
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "td agent by can read to maillog"
+  file:
+    path: /var/log/maillog
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "td agent by can read to messages"
+  file:
+    path: /var/log/messages
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "td agent by can read to secure"
+  file:
+    path: /var/log/secure
+    owner: root
+    group: root
+    mode: 0644
