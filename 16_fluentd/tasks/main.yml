@@ -30,15 +30,9 @@
   with_items:
   - fluent-plugin-rewrite-tag-filter
   - fluent-plugin-elasticsearch
-  - fluent-plugin-record-reformer
   - fluent-plugin-cloudwatch-logs
-  - fluent-plugin-ec2-metadata
-  - fluent-plugin-s3
   - fluent-plugin-slack
-  - fluent-plugin-rewrite
   - fluent-plugin-tail-ex
-  - fluent-plugin-forest
-  - fluent-plugin-google-cloud
   notify:
   - restart fluentd
 
