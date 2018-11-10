@@ -1,12 +1,8 @@
 # 遅いPCでやった際にIPが付かない問題が発生する。その場合のための対応
 - name: "nmcli connection reload"
   command: nmcli connection reload
-  when:
-    - runner is undefined
 
 - name: restart network
   service:
     name: network
     state: restarted
-  when:
-    - runner is undefined

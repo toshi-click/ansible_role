@@ -34,5 +34,3 @@
 
 - name: "rkhunter --propupd"
   command: rkhunter --propupd
-  when:
-    - runner is undefined

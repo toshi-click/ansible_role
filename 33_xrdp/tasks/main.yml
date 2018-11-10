@@ -3,8 +3,8 @@
     name: xrdp
     state: latest
   notify:
-    - enable samba
-    - restart samba
+    - enable xrdp
+    - restart xrdp
 
 - name: install the 'GNOME Desktop' package group
   command: 'yum -y groupinstall "GNOME Desktop"'
@@ -45,5 +45,3 @@
 # GUI起動に切り替える
 - name: "GUI起動に切り替える"
   command: systemctl set-default graphical.target
-  when:
-    - runner is undefined

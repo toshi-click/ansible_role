@@ -2,5 +2,3 @@
   service:
     name: docker
     state: restarted
-  when:
-    - runner is undefined

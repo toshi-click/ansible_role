@@ -2,12 +2,8 @@
   service:
     name: xrdp
     state: restarted
-  when:
-    - runner is undefined
 
 - name: enable xrdp
   service:
     name: xrdp
     enabled: !!str yes
-  when:
-    - runner is undefined

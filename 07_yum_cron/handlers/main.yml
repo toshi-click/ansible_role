@@ -2,12 +2,8 @@
   service:
     name: yum-cron
     state: restarted
-  when:
-    - runner is undefined
 
 - name: enable yum-cron
   service:
     name: yum-cron
     enabled: !!str yes
-  when:
-    - runner is undefined

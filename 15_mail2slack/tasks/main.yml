@@ -17,8 +17,6 @@
 
 - name: newaliases
   command: newaliases
-  when:
-    - runner is undefined
 
 # root宛メールをslackに通知するシェル配置
 - name: "/export作成"
