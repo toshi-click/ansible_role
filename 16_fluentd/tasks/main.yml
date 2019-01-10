@@ -33,6 +33,7 @@
   - fluent-plugin-cloudwatch-logs
   - fluent-plugin-slack
   - fluent-plugin-tail-ex
+  - fluent-plugin-mail
   notify:
   - restart fluentd
 
