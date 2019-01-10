@@ -14,7 +14,7 @@
 - name: user join to other group
   user:
     name: "{{ manage_user.name }}"
-    append: !!str yes
+    append: yes
     groups: "{{ manage_user.subgroups }}"
 
 - name: "directory create /home/{{ manage_user.name }}/.ssh"

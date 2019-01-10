@@ -6,4 +6,4 @@
 - name: enable postfix
   service:
     name: postfix
-    enabled: !!str yes
+    enabled: yes

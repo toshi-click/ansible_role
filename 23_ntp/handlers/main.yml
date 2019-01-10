@@ -6,4 +6,4 @@
 - name: enable chronyd
   service:
     name: chronyd
-    enabled: !!str yes
+    enabled: yes

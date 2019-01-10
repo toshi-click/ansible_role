@@ -6,4 +6,4 @@
 - name: enable sshd
   service:
     name: sshd
-    enabled: !!str yes
+    enabled: yes

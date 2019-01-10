@@ -6,7 +6,7 @@
 - name: enable samba
   service:
     name: smb
-    enabled: !!str yes
+    enabled: yes
 
 - name: restart nmb
   service:
@@ -16,4 +16,4 @@
 - name: enable nmb
   service:
     name: nmb
-    enabled: !!str yes
+    enabled: yes

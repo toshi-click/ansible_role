@@ -3,4 +3,4 @@
   sysctl:
     value: 262144
     state: present
-    ignoreerrors: !!str yes
+    ignoreerrors: yes

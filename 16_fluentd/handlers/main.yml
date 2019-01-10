@@ -6,4 +6,4 @@
 - name: enable fluentd
   service:
     name: td-agent
-    enabled: !!str yes
+    enabled: yes

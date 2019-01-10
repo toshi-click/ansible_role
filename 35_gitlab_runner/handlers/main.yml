@@ -1,0 +1,9 @@
+- name: restart gitlab-runner
+  service:
+    name: gitlab-runner
+    state: restarted
+
+- name: enable gitlab-runner
+  service:
+    name: gitlab-runner
+    enabled: yes

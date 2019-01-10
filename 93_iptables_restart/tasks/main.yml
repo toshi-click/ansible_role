@@ -2,10 +2,10 @@
   service:
     name: iptables
     state: restarted
-    enabled: !!str yes
+    enabled: yes
 
 - name: restart ip6tables
   service:
     name: ip6tables
     state: restarted
-    enabled: !!str yes
+    enabled: yes

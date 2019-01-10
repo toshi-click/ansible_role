@@ -6,4 +6,4 @@
 - name: enable libvirt
   service:
     name: libvirtd
-    enabled: !!str yes
+    enabled: yes

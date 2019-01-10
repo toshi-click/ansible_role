@@ -6,4 +6,4 @@
 - name: enable xrdp
   service:
     name: xrdp
-    enabled: !!str yes
+    enabled: yes

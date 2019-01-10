@@ -30,7 +30,7 @@
   get_url:
     url: https://download.docker.com/linux/centos/docker-ce.repo
     dest: /etc/yum.repos.d/docker-ce.repo
-    force: !!str yes
+    force: yes
     owner: root
     group: root
     mode: 0644
@@ -71,7 +71,7 @@
 - name: enable docker
   service:
     name: docker
-    enabled: !!str yes
+    enabled: yes
 
 - name: "docker-compose Download"
   get_url:

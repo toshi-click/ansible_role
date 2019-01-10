@@ -5,10 +5,10 @@
   synchronize:
     src: "{{ rsync.src }}"
     dest: "{{ rsync.dest }}"
-    recursive: !!str yes
-    delete: !!str yes
-    checksum: !!str yes
-    times: !!str no
+    recursive: yes
+    delete: yes
+    checksum: yes
+    times: no
     rsync_opts:
       - "--exclude=.git"
       - "--exclude=.idea"

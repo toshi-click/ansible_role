@@ -2,7 +2,7 @@
   service:
     name: iptables
     state: restarted
-    enabled: !!str yes
+    enabled: yes
   notify:
   - restart docker
 
@@ -10,7 +10,7 @@
   service:
     name: ip6tables
     state: restarted
-    enabled: !!str yes
+    enabled: yes
 
 - name: restart docker
   service:

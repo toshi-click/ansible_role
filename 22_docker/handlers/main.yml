@@ -6,4 +6,4 @@
 - name: enable docker
   service:
     name: docker
-    enabled: !!str yes
+    enabled: yes

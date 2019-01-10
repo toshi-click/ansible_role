@@ -14,7 +14,7 @@
 - name: user join to other group
   user:
     name: "{{ ansible_user.name }}"
-    append: !!str yes
+    append: yes
     groups: "{{ ansible_user.subgroups }}"
 
 - name: "directory create /home/{{ ansible_user.name }}/.ssh"

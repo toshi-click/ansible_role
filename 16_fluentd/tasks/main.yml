@@ -5,7 +5,7 @@
     mode: 0755
 
 - name: run fluentd install shell
-  command: bash /usr/local/src/install-redhat-td-agent3.sh
+  shell: bash /usr/local/src/install-redhat-td-agent3.sh
   notify:
   - restart fluentd
 
