@@ -34,6 +34,7 @@
   - fluent-plugin-slack
   - fluent-plugin-tail-ex
   - fluent-plugin-mail
+  - fluent-plugin-secure-forward
   notify:
   - restart fluentd
 
