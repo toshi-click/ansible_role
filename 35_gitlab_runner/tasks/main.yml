@@ -1,0 +1,25 @@
+- name: Gitlab Runner repository setting RH CentOS
+  shell: curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.rpm.sh | sudo bash
+  when: "ansible_os_family == 'RedHat'"
+
+- name: Gitlab Runner repository setting  Debian Ubuntu
+  shell: curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
+  when: "ansible_os_family == 'Debian'"
+
+- name: Gitlab Runner install RH CentOS
+  package:
+    name: gitlab-runner
+    state: present
+  notify:
+    - enable gitlab-runner
+    - restart gitlab-runner
+  when: "ansible_os_family == 'RedHat'"
+
+- name: Gitlab Runner install RH CentOS
+  package:
+    name: gitlab-runner
+    state: present
+  notify:
+    - enable gitlab-runner
+    - restart gitlab-runner
+  when: "ansible_os_family == 'RedHat'"
