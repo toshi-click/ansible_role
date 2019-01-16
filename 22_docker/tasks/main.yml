@@ -74,6 +74,21 @@
       - enable docker
       - restart docker
 
+  - name: "docker-compose Download"
+    get_url:
+      url: "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-{{ansible_system}}-{{ansible_machine}}"
+      dest: /usr/local/bin/docker-compose
+      owner: root
+      group: root
+      mode: 0755
+    tags: docker
+
+  - name: "docker-compose permission set"
+    file:
+      path: /usr/local/bin/docker-compose
+      owner: root
+      group: root
+      mode: 0755
   # CentOS向けここまで
   when: "ansible_os_family == 'RedHat'"
 
@@ -114,7 +129,12 @@
 
   - name: install docker-ce
     apt: pkg=docker-ce state=present update_cache=yes
-    when:  set_repo
+    when: set_repo
+
+  - name: install docker-compose
+    package:
+      name: docker-compose
+      state: present
 
   # Debian・Ubuntu向け設定ここまで
   when: "ansible_os_family == 'Debian'"
@@ -124,22 +144,6 @@
   service:
     name: docker
     enabled: yes
-
-- name: "docker-compose Download"
-  get_url:
-    url: "https://github.com/docker/compose/releases/download/1.22.0/docker-compose-{{ansible_system}}-{{ansible_machine}}"
-    dest: /usr/local/bin/docker-compose
-    owner: root
-    group: root
-    mode: 0755
-  tags: docker
-
-- name: "docker-compose permission set"
-  file:
-    path: /usr/local/bin/docker-compose
-    owner: root
-    group: root
-    mode: 0755
 
 # docker ipv4 forward-----------------------------------------------------------------------------------------
 - name: "setting ipv4 forward for docker"
