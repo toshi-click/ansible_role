@@ -1,21 +1,23 @@
 # パッケージアップデート------
-- name: packages update RH CentOS
-  package:
-    name: "*"
-    state: latest
+- block:
+  - name: packages update
+    package:
+      name: "*"
+      state: latest
+    when: "ansible_os_family == 'RedHat'"
+  # CentOS向けここまで
   when: "ansible_os_family == 'RedHat'"
 
 # Debian・Ubuntu向け設定
 - block:
-  - name: Run the equivalent of "apt-get update" as a separate step
+  - name: Upgrade all packages to the latest version
     apt:
       name: "*"
       state: latest
-      update_cache: yes
-      force_apt_get: True
 
-  - name: Upgrade all packages to the latest version
+  - name: Update all packages to the latest version
     apt:
       upgrade: dist
+
   # Debian・Ubuntu向け設定ここまで
   when: "ansible_os_family == 'Debian'"
