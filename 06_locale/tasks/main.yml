@@ -1,22 +1,49 @@
-- name: "install ibus-kkc"
-  package:
-    name: "ibus-kkc"
-    state: latest
+# Debian・Ubuntu向け設定
+- block:
+  - name: "install language-pack-ja-base"
+    package:
+      name: language-pack-ja-base
+      state: latest
+  - name: "install language-pack-ja"
+    package:
+      name: language-pack-ja
+      state: latest
 
-- name: "install vlgothic-*"
-  package:
-    name: "vlgothic-*"
-    state: latest
+  - name: "install ibus-mozc"
+    package:
+      name: ibus-mozc
+      state: latest
 
-# 日本語の設定
-# - name: "set-locale"
-#  command: localectl set-locale LANG=ja_JP.UTF-8
+  - name: "set-locale"
+    shell: localectl set-locale LANG=ja_JP.UTF-8 LANGUAGE="ja_JP:ja"
 
-- name: "localedef"
-  command: localedef -f UTF-8 -i ja_JP ja_JP.UTF-8
+  # Debian・Ubuntu向け設定ここまで
+  when: "ansible_os_family == 'Debian'"
 
-- name: "set ja_JP to /etc/locale.conf"
-  command: bash -c "echo 'LANG="ja_JP.UTF-8"' > /etc/locale.conf"
+# CentOS向け設定
+- block:
+  - name: "install ibus-kkc"
+    package:
+      name: "ibus-kkc"
+      state: latest
 
-- name: "set ja_JP"
-  command: bash -c "source /etc/locale.conf"
+  - name: "install vlgothic-*"
+    package:
+      name: "vlgothic-*"
+      state: latest
+
+  # 日本語の設定
+  # - name: "set-locale"
+  #  command: localectl set-locale LANG=ja_JP.UTF-8
+
+  - name: "localedef"
+    command: localedef -f UTF-8 -i ja_JP ja_JP.UTF-8
+
+  - name: "set ja_JP to /etc/locale.conf"
+    command: bash -c "echo 'LANG="ja_JP.UTF-8"' > /etc/locale.conf"
+
+  - name: "set ja_JP"
+    command: bash -c "source /etc/locale.conf"
+
+  # CentOS向けここまで
+  when: "ansible_os_family == 'RedHat'"
