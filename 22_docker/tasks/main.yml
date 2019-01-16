@@ -1,73 +1,125 @@
-- name: device-mapper-persistent-data install
-  package:
-    name: device-mapper-persistent-data
-    state: present
+- name: Check kernel version.
+  fail: msg="Kernel {{ ansible_kernel }} is not supported."
+  when: "ansible_kernel | version_compare('3.10', '<')"
 
-- name: lvm2 install
-  package:
-    name: lvm2
-    state: present
+# CentOS向け設定
+- block:
+  - name: device-mapper-persistent-data install
+    package:
+      name: device-mapper-persistent-data
+      state: present
 
-# latest docker install ##################################################################################
-# Docker関連パッケージを一旦削除
-- name: docker remove
-  package:
-    name: docker
-    state: absent
+  ## docker ceのリポジトリ追加
+  - name: install yum-utils
+    package:
+      name: yum-utils
+      state: present
 
-## docker ceのリポジトリ追加
-- name: install yum-utils
-  package:
-    name: yum-utils
-    state: present
+  - name: lvm2 install
+    package:
+      name: lvm2
+      state: present
 
-#- name: Add Docker GPG key.
-#  rpm_key:
-#    key: https://download.docker.com/linux/centos/gpg
-#    state: present
+  # latest docker install ##################################################################################
+  # Docker関連パッケージを一旦削除
+  - name: docker remove
+    package:
+      name: docker
+      state: absent
 
-- name: Add Docker CE repository
-  get_url:
-    url: https://download.docker.com/linux/centos/docker-ce.repo
-    dest: /etc/yum.repos.d/docker-ce.repo
-    force: yes
-    owner: root
-    group: root
-    mode: 0644
+  #- name: Add Docker GPG key.
+  #  rpm_key:
+  #    key: https://download.docker.com/linux/centos/gpg
+  #    state: present
 
-- name: Enable Docker Edge repo
-  ini_file:
-    dest: /etc/yum.repos.d/docker-ce.repo
-    section: 'docker-ce-edge'
-    option: enabled
-    value: 0
+  - name: Add Docker CE repository
+    get_url:
+      url: https://download.docker.com/linux/centos/docker-ce.repo
+      dest: /etc/yum.repos.d/docker-ce.repo
+      force: yes
+      owner: root
+      group: root
+      mode: 0644
 
-- name: Enable Docker Test repo
-  ini_file:
-    dest: /etc/yum.repos.d/docker-ce.repo
-    section: 'docker-ce-test'
-    option: enabled
-    value: 0
+  - name: Enable Docker Edge repo
+    ini_file:
+      dest: /etc/yum.repos.d/docker-ce.repo
+      section: 'docker-ce-edge'
+      option: enabled
+      value: 0
 
-- name: Enable Docker Stable repo
-  ini_file:
-    dest: /etc/yum.repos.d/docker-ce.repo
-    section: 'docker-ce-stable'
-    option: enabled
-    value: 0
+  - name: Enable Docker Test repo
+    ini_file:
+      dest: /etc/yum.repos.d/docker-ce.repo
+      section: 'docker-ce-test'
+      option: enabled
+      value: 0
 
-- name: test
-  shell: cat /etc/yum.repos.d/docker-ce.repo
+  - name: Enable Docker Stable repo
+    ini_file:
+      dest: /etc/yum.repos.d/docker-ce.repo
+      section: 'docker-ce-stable'
+      option: enabled
+      value: 0
 
-- name: "docker ce install"
-  yum:
-    name: docker-ce
-    state: present
-    enablerepo: docker-ce-stable
-  notify:
-    - enable docker
-    - restart docker
+  - name: test
+    shell: cat /etc/yum.repos.d/docker-ce.repo
 
+  - name: "docker ce install"
+    yum:
+      name: docker-ce
+      state: present
+      enablerepo: docker-ce-stable
+    notify:
+      - enable docker
+      - restart docker
+
+  # CentOS向けここまで
+  when: "ansible_os_family == 'RedHat'"
+
+# Debian・Ubuntu向け設定
+- block:
+  - name: apt-transport-https install
+    package:
+      name: apt-transport-https
+      state: present
+
+  - name: ca-certificates install
+    package:
+      name: ca-certificates
+      state: present
+
+  - name: curl install
+    package:
+      name: curl
+      state: present
+
+  - name: software-properties-common install
+    package:
+      name: software-properties-common
+      state: present
+
+  - name: set dockers official gpg key
+    apt_key:
+      url: "https://download.docker.com/linux/ubuntu/gpg"
+      state: present
+    register: set_key
+
+  - name: set up the stable repository
+    apt_repository:
+      repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+      state: present
+    when: set_key
+    register: set_repo
+
+  - name: install docker-ce
+    apt: pkg=docker-ce state=present update_cache=yes
+    when:  set_repo
+
+  # Debian・Ubuntu向け設定ここまで
+  when: "ansible_os_family == 'Debian'"
+
+# OSで分岐の必要のない処理
 - name: enable docker
   service:
     name: docker
@@ -90,7 +142,7 @@
     mode: 0755
 
 # docker ipv4 forward-----------------------------------------------------------------------------------------
-- name: "Dockerのためにipv4 forwardを設定"
+- name: "setting ipv4 forward for docker"
   template:
     src: "10-ipv4.conf.j2"
     dest: "/etc/sysctl.d/10-ipv4.conf"
