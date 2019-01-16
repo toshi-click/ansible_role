@@ -58,4 +58,3 @@
     command: systemctl set-default graphical.target
   # CentOS向けここまで
   when: "ansible_os_family == 'RedHat'"
-
