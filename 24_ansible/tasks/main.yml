@@ -17,7 +17,7 @@
 - name: Change the line feed code manually /etc/ansible/ansible.cfg
   shell: sed -i 's/\r//' /etc/ansible/ansible.cfg
 
-- name: "/root/.ssh作成"
+- name: "create directory /root/.ssh"
   file:
     path: "/root/.ssh"
     state: directory
