@@ -1,11 +1,24 @@
-- name: get fluentd install shell
+- name: get RedHat fluentd install shell
   get_url:
     url: "https://toolbelt.treasuredata.com/sh/install-redhat-td-agent3.sh"
     dest: /usr/local/src/install-redhat-td-agent3.sh
     mode: 0755
+  when: "ansible_os_family == 'RedHat'"
 
-- name: run fluentd install shell
+- name: run RedHat fluentd install shell
   shell: bash /usr/local/src/install-redhat-td-agent3.sh
+  when: "ansible_os_family == 'RedHat'"
+
+- name: get Debian fluentd install shell
+  get_url:
+    url: "https://toolbelt.treasuredata.com/sh/install-ubuntu-xenial-td-agent3.sh"
+    dest: /usr/local/src/install-ubuntu-xenial-td-agent3.sh
+    mode: 0755
+  when: "ansible_os_family == 'Debian'"
+
+- name: run Debian fluentd install shell
+  shell: bash /usr/local/src/install-ubuntu-xenial-td-agent3.sh
+  when: "ansible_os_family == 'Debian'"
 
 - name: enable fluentd
   service:
