@@ -1,0 +1,59 @@
+# Debian・Ubuntu向け設定
+- block:
+
+  #characters gnome-logs gnome-system-monitor gtk-common-themes
+  #sudo apt purge gnome-font-viewer eog evince gedit firefox
+  #sudo snap install eog evince gedit gnome-3-26-1604 gnome-calculator gnome-characters gnome-font-viewer gnome-logs gnome-system-monitor gtk-common-themes firefox
+  #sudo apt -y install qemu-kvm adb
+  #sudo gpasswd -a "${USER}" kvm
+  # sudo snap install android-studio --classic
+  # ansibleでsnap
+  #- name: install heroku cli via snap
+  #  command: snap install heroku --classic
+  #Android Studioの日本語化(snappy編)
+  #wget http://ftp.jaist.ac.jp/pub/mergedoc/pleiades/build/stable/pleiades.zip
+  #unzip pleiades.zip -d pleiades/
+  #  mkdir -p ~/.AndroidStudio3.3/config/
+  #  cp -r pleiades/plugins/jp.sourceforge.mergedoc.pleiades/ ~/.AndroidStudio3.3/config/
+  #  ls -dF ~/.AndroidStudio3.3/config/jp.sourceforge.mergedoc.pleiades/pleiades.jar | xargs -I {} sed -e '$a \\n-Xverify:none\n-javaagent:{}' /snap/android-studio/current/android-studio/bin/studio64.vmoptions > ~/.AndroidStudio3.3/config/studio64.vmoptions
+  #フォント変更
+  #sudo apt install fonts-ricty-diminished
+  # 設定画面を開き、エディター > フォントで、Ricty Diminishedを選択し、サイズを14にするとちょうど良い感じです。
+
+
+  when: "ansible_os_family == 'Debian'"
+
+## CentOS向け設定
+#- block:
+#  # CentOS向けここまで
+#  when: "ansible_os_family == 'RedHat'"
+#
+#- name: unzip install
+#  package:
+#    name: unzip
+#    state: latest
+#
+#- name: Check if android studio is installed
+#  command: grep {{android_studio_build}} {{install_dir}}/build.txt
+#  register: install
+#  failed_when: False
+#  changed_when: False
+#
+#- name: Download Android Studio .zip
+#  get_url:
+#    url: {{ linux_url }}
+#    dest: {{ local_package_location }}
+#    owner: root
+#    group: root
+#    mode: 0777
+#  when: install.stdout.find(android_studio_build) == -1
+#
+#- name: Uncompress Android Studio
+#  command: rm -rf {{ install_dir }}
+#  sudo: True
+#  when: install.stdout.find(android_studio_build) == -1
+#
+#- name: Uncompress Android Studio
+#  command: unzip -od /opt {{ local_package_location }}
+#  sudo: True
+#  when: install.stdout.find(android_studio_build) == -1
