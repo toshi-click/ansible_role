@@ -7,6 +7,10 @@
     name: docker
     state: restarted
 
+- name: docker container update
+  shell: 'docker images | cut -d " " -f1 | tail -n +2 | sort | uniq | egrep -v "^(<none>|ubuntu)$" | xargs -P0 -L1 docker pull'
+  ignore_errors: true
+
 - name: "do {{ service.docker.compose_dir }}/docker-compose pull"
   shell: /usr/local/bin/docker-compose pull
   args:
