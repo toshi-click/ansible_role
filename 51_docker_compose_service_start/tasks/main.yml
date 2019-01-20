@@ -21,11 +21,6 @@
   args:
     chdir: "{{ service.docker.compose_dir }}"
 
-- name: "do {{ service.docker.compose_dir }}/docker-compose down"
-  shell: /usr/local/bin/docker-compose down
-  args:
-    chdir: "{{ service.docker.compose_dir }}"
-
 - name: "do {{ service.docker.compose_dir }}/docker-compose up -d --force-recreate"
   shell: /usr/local/bin/docker-compose up -d --force-recreate
   args:
