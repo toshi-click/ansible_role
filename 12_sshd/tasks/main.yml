@@ -1,15 +1,3 @@
-# sshd -----------------------------------------------------------------------------------------
-- name: sshd is configured
-  notify:
-    - restart sshd
-    - enable sshd
-  template:
-    src: "sshd_config.j2"
-    dest: "/etc/ssh/sshd_config"
-    owner: root
-    group: root
-    mode: 0600
-
 # ssh ログインでメール送る設定のべき等性確保のために空ファイル配置
 - name: sshrc
   template:
@@ -18,3 +6,35 @@
     owner: root
     group: root
     mode: 0755
+
+# Debian・Ubuntu向け設定
+- block:
+  # sshd
+  - name: sshd is configured
+    notify:
+      - restart sshd
+      - enable sshd
+    template:
+      src: "ubuntu_sshd_config"
+      dest: "/etc/ssh/sshd_config"
+      owner: root
+      group: root
+      mode: 0644
+  # Debian・Ubuntu向け設定ここまで
+  when: "ansible_os_family == 'Debian'"
+
+# CentOS向け設定
+- block:
+  # sshd
+  - name: sshd is configured
+    notify:
+      - restart sshd
+      - enable sshd
+    template:
+      src: "sshd_config.j2"
+      dest: "/etc/ssh/sshd_config"
+      owner: root
+      group: root
+      mode: 0600
+  # CentOS向けここまで
+  when: "ansible_os_family == 'RedHat'"
