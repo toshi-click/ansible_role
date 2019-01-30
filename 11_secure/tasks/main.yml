@@ -1,20 +1,25 @@
-# suの制限-----------------------------------------------------------------------------------------
-- name: /etc/pam.d/su
-  template:
-    src: "su.j2"
-    dest: "/etc/pam.d/su"
-    owner: root
-    group: root
-    mode: 0644
+# CentOS向け設定
+- block:
+  # sudo の設定
+  - name: "/etc/sudoers"
+    template:
+      src: "sudoers.j2"
+      dest: "/etc/sudoers"
+      owner: root
+      group: root
+      mode: 0440
 
-# sudo の設定
-- name: "/etc/sudoers"
-  template:
-    src: "sudoers.j2"
-    dest: "/etc/sudoers"
-    owner: root
-    group: root
-    mode: 0440
+  # suの制限-----------------------------------------------------------------------------------------
+  - name: /etc/pam.d/su
+    template:
+      src: "su.j2"
+      dest: "/etc/pam.d/su"
+      owner: root
+      group: root
+      mode: 0644
+
+  # CentOS向けここまで
+  when: "ansible_os_family == 'RedHat'"
 
 # hosts.allow -----------------------------------------------------------------------------------------
 - name: "/etc/hosts.allow"
