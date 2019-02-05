@@ -20,6 +20,6 @@ jobs:
     executor: # name で使いたい executor を指定する
       name: default
     steps:
-  - checkout
-  - run: pip install -r ./.circleci/requirements.txt
-  - run: ansible-lint ./**/*.yml -c .circleci/.ansible-lint
+      - checkout
+      - run: pip install -r ./.circleci/requirements.txt
+      - run: ansible-lint ./**/*.yml -c .circleci/.ansible-lint
