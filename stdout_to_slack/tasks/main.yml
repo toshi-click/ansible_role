@@ -1,0 +1,14 @@
+# JSON形式のデータを見やすく表示したり、データを抽出したりするコマンド。
+- name: jq install
+  package:
+    name: jq
+    state: latest
+
+# 標準出力をSlackに通知するシェルを配置する
+- name: "{{ bin_dir }}/stdout_to_slack.sh set"
+  template:
+    src: "stdout_to_slack.sh"
+    dest: "{{ bin_dir }}/stdout_to_slack.sh"
+    owner: root
+    group: root
+    mode: 0755

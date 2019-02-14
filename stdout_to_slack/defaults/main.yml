@@ -1,0 +1,5 @@
+---
+bin_dir: "/export/bin"
+stdout_to_slack_web_hook_url: ""
+stdout_to_slack_channel: "general"
+stdout_to_slack_icon: ":alien:"
