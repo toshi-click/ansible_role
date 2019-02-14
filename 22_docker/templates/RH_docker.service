@@ -9,10 +9,10 @@ Type=notify
 # the default is not to use systemd for cgroups because the delegate issues still
 # exists and systemd currently does not support the cgroup feature set required
 # for containers run by docker
-{% if docker_remote_api_enable == "yes" %}
-ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:{{ docker_remote_api_port }}
-{% else %}
+{% if docker_remote_api_enable == "no" %}
 ExecStart=/usr/bin/dockerd
+{% else %}
+ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:{{ docker_remote_api_port }}
 {% endif %}
 ExecReload=/bin/kill -s HUP $MAINPID
 # Having non-zero Limit*s causes performance problems due to accounting overhead
