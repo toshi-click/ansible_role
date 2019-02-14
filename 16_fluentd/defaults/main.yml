@@ -1,0 +1,6 @@
+---
+fluentd_user: td-agent
+fluentd_group: td-agent
+fluentd_aws_region: ""
+fluentd_aws_access_key_id: ""
+fluentd_aws_secret_access_key: ""

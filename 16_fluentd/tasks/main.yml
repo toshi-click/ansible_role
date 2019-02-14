@@ -1,24 +1,28 @@
-- name: get RedHat fluentd install shell
-  get_url:
-    url: "https://toolbelt.treasuredata.com/sh/install-redhat-td-agent3.sh"
-    dest: /usr/local/src/install-redhat-td-agent3.sh
-    mode: 0755
-  when: "ansible_os_family == 'RedHat'"
+# Debian・Ubuntu向け設定
+- block:
+    - name: get Debian fluentd install shell
+      get_url:
+        url: "https://toolbelt.treasuredata.com/sh/install-ubuntu-xenial-td-agent3.sh"
+        dest: /usr/local/src/install-ubuntu-xenial-td-agent3.sh
+        mode: 0755
 
-- name: run RedHat fluentd install shell
-  shell: bash /usr/local/src/install-redhat-td-agent3.sh
-  when: "ansible_os_family == 'RedHat'"
-
-- name: get Debian fluentd install shell
-  get_url:
-    url: "https://toolbelt.treasuredata.com/sh/install-ubuntu-xenial-td-agent3.sh"
-    dest: /usr/local/src/install-ubuntu-xenial-td-agent3.sh
-    mode: 0755
+    - name: run Debian fluentd install shell
+      shell: bash /usr/local/src/install-ubuntu-xenial-td-agent3.sh
+  # Debian・Ubuntu向け設定ここまで
   when: "ansible_os_family == 'Debian'"
 
-- name: run Debian fluentd install shell
-  shell: bash /usr/local/src/install-ubuntu-xenial-td-agent3.sh
-  when: "ansible_os_family == 'Debian'"
+# CentOS向け設定
+- block:
+    - name: get RedHat fluentd install shell
+      get_url:
+        url: "https://toolbelt.treasuredata.com/sh/install-redhat-td-agent3.sh"
+        dest: /usr/local/src/install-redhat-td-agent3.sh
+        mode: 0755
+
+    - name: run RedHat fluentd install shell
+      shell: bash /usr/local/src/install-redhat-td-agent3.sh
+  # CentOS向けここまで
+  when: "ansible_os_family == 'RedHat'"
 
 - name: enable fluentd
   service:
@@ -33,15 +37,43 @@
     group: root
     mode: 0644
   notify:
-  - restart fluentd
+    - restart fluentd
 
 # よく使うプラグイン導入
-- name : plugin To Use Often
+- name: plugin To Use Often
   command: td-agent-gem install {{ item }}
   with_items:
-  - fluent-plugin-rewrite-tag-filter
-  - fluent-plugin-elasticsearch
-  - fluent-plugin-cloudwatch-logs
-  - fluent-plugin-slack
-  - fluent-plugin-tail-ex
-  - fluent-plugin-mail
+    - fluent-plugin-rewrite-tag-filter
+    - fluent-plugin-elasticsearch
+    - fluent-plugin-cloudwatch-logs
+    - fluent-plugin-slack
+    - fluent-plugin-tail-ex
+    - fluent-plugin-mail
+
+- name: custom td-agent.service set
+  template:
+    src: "td-agent.service"
+    dest: /etc/systemd/system/td-agent.service
+    owner: root
+    group: root
+    mode: 0644
+
+# servicedの再読込（/etc/systemd/system/のファイルを変更した場合に必須）
+- name: daemon reload
+  shell: systemctl daemon-reload
+
+- name: "create directory /etc/td-agent/certs"
+  file:
+    path: "/etc/td-agent/certs"
+    state: directory
+    owner: td-agent
+    group: td-agent
+    mode: 0700
+
+- name: fluentd.crt set
+  template:
+    src: "fluentd.crt"
+    dest: /etc/td-agent/certs/fluentd.crt
+    owner: td-agent
+    group: td-agent
+    mode: 0644
