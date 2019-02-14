@@ -1,0 +1,7 @@
+- name: "create directory {{ bin_dir }}"
+  file:
+    path: "{{ bin_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
