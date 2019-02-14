@@ -1,0 +1,7 @@
+- name: "create directory {{ app_dir }}"
+  file:
+    path: "{{ app_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
