@@ -12,7 +12,7 @@ Type=notify
 {% if docker_remote_api_enable == "no" %}
 ExecStart=/usr/bin/dockerd
 {% else %}
-ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:{{ docker_remote_api_port }}
+ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:{{ docker_remote_api_port }} -H unix://var/run/docker.sock
 {% endif %}
 ExecReload=/bin/kill -s HUP $MAINPID
 # Having non-zero Limit*s causes performance problems due to accounting overhead
