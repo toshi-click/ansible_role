@@ -1,19 +1,47 @@
 ---
 # tasks file for virtualbox (Ubuntu specific)
+- name: gcc install
+  package:
+    name: gcc
+    state: latest
 
-- name: Add APT key for Oracle VirtualBox repository
-  apt_key: >
-    url=http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc
-    state=present
+- name: make install
+  package:
+    name: make
+    state: latest
+
+- name: dkms install
+  package:
+    name: dkms
+    state: latest
+
+- name: Add APT key for Oracle VirtualBox repository 1
+  apt_key:
+    url: http://download.virtualbox.org/virtualbox/debian/oracle_vbox.asc
+    state: present
+  tags: virtualbox
+
+- name: Add APT key for Oracle VirtualBox repository 2
+  apt_key:
+    url: https://www.virtualbox.org/download/oracle_vbox_2016.asc
+    state: present
+  tags: virtualbox
+
+- name: Add APT key for Oracle VirtualBox repository 3
+  apt_key:
+    url: https://www.virtualbox.org/download/oracle_vbox.asc
+    state: present
   tags: virtualbox
 
 - name: Configure Oracle VirtualBox APT repository
-  apt_repository: >
-    repo="deb http://download.virtualbox.org/virtualbox/debian {{ ansible_distribution_release }} contrib"
-    state=present
+  apt_repository:
+    repo: "deb http://download.virtualbox.org/virtualbox/debian {{ ansible_distribution_release }} contrib"
+    state: present
   tags: virtualbox
 
 - name: Install VirtualBox packages
-  apt: name={{ item }} state=present update_cache=yes
-  with_items: virtualbox_packages
+  apt:
+    pkg: "{{ virtualbox_packages }}"
+    state: present
+    update_cache: yes
   tags: virtualbox
