@@ -1,35 +1,3 @@
-- name: "/export作成"
-  file:
-    path: "/export"
-    state: directory
-    owner: root
-    group: root
-    mode: 0777
-
-- name: "/export/share作成"
-  file:
-    path: "/export/share"
-    state: directory
-    owner: "{{ manage_user.name }}"
-    group: "{{ manage_user.group }}"
-    mode: 0777
-
-- name: "/export/share/share作成"
-  file:
-    path: "/export/share/share"
-    state: directory
-    owner: "{{ manage_user.name }}"
-    group: "{{ manage_user.group }}"
-    mode: 0777
-
-- name: "/export/share/private"
-  file:
-    path: "/export/share/private"
-    state: directory
-    owner: "{{ manage_user.name }}"
-    group: "{{ manage_user.group }}"
-    mode: 0777
-
 - name: samba install
   package:
     name: samba
@@ -42,14 +10,3 @@
   package:
     name: samba-client
     state: latest
-
-- name: "smb.conf 設定"
-  template:
-    src: "smb.conf.j2"
-    dest: "/etc/samba/smb.conf"
-    owner: root
-    group: root
-    mode: 0644
-  notify:
-    - restart samba
-    - restart nmb
