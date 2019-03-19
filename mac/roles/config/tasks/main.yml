@@ -1,0 +1,232 @@
+---
+# ダークモードにする
+- name: set AppleInterfaceStyle
+  osx_defaults:
+    host: "NSGlobalDomain"
+    key: "AppleInterfaceStyle"
+    type: string
+    value: Dark
+
+- name: "General - Automatically hide and show the menu bar"
+  osx_defaults:
+    domain: 'NSGlobalDomain'
+    key: '_HIHideMenuBar'
+    type: bool
+    value: false
+  notify: restart MenuBar
+
+- name: 'Dock tilesize'
+  osx_defaults:
+    domain: 'com.apple.dock'
+    key: 'tilesize'
+    type: 'float'
+    value: 60
+    state: 'present'
+  notify: 'restart dock'
+
+- name: 'Dock autohide'
+  osx_defaults:
+    domain: 'com.apple.dock'
+    key: 'autohide'
+    type: 'bool'
+    value: 'TRUE'
+    state: 'present'
+  notify: 'restart dock'
+
+# Dock - スペース表示高速化
+# defaults write com.apple.dock workspaces-swoosh-animation-off -bool yes
+- name: workspaces-swoosh-animation-off
+  osx_defaults:
+    domain: com.apple.dock
+    key: workspaces-swoosh-animation-off
+    type: boolean
+    value: true
+    state: present
+  notify: 'restart dock'
+
+# キーリピートの速度を爆速に
+- name: "キーリピート検知待ち時間"
+  osx_defaults:
+    key: InitialKeyRepeat
+    type: int
+    value: 50
+    state: present
+
+- name: "キーリピート間隔時間"
+  osx_defaults:
+    key: KeyRepeat
+    type: int
+    value: 5
+    state: present
+
+- name: "バッテリー残量設定"
+  osx_defaults:
+    domain: com.apple.menuextra.battery
+    key: ShowPercent
+    type: string
+    value: YES
+    state: present
+
+- name: "時刻表示設定"
+  osx_defaults:
+    domain: com.apple.menuextra.clock
+    key: DateFormat
+    type: string
+    value: "M\\U6708d\\U65e5(EEE)  H:mm:ss"
+    state: present
+
+- name: "トラックパッド右クリックの有効化"
+  osx_defaults:
+    domain: com.apple.AppleMultitouchTrackpad
+    key: TrackpadCornerSecondaryClick
+    type: int
+    value: 2
+    state: present
+
+- name: "トラックパッドタップの有効化"
+  osx_defaults:
+    domain: com.apple.AppleMultitouchTrackpad
+    key: Clicking
+    type: int
+    value: 1
+    state: present
+
+- name: "ライブ変換の無効化"
+  osx_defaults:
+    domain: com.apple.inputmethod.Kotoeri
+    key: JIMPrefLiveConversionKey
+    type: int
+    value: 0
+    state: present
+
+- name: config sudoers
+  become: yes
+  become_user: root
+  lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^%admin\s+ALL'
+    line: '%admin ALL = (ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'
+
+- homebrew:
+    name: bash
+    path: /usr/local/bin/
+    state: present
+  when: ansible_os_family == 'Darwin'
+
+- name: check if exists bash on macOS
+  command: /usr/local/bin/bash --version
+  register: check_bash_version
+  when: ansible_os_family == 'Darwin'
+  changed_when: no
+
+- name: change shell
+  become: yes
+  command: "chsh -s '/usr/local/bin/bash' {{ login_user_name }}"
+  when: ansible_os_family == 'Darwin' and check_bash_version.rc == 0
+
+- name: "~/.ssh/config を設定"
+  template:
+    src: ".ssh/config"
+    dest: "{{ user_home_dir }}/.ssh/config"
+    mode: 0644
+
+- name: create .bashrc
+  template:
+    src: .bashrc.j2
+    dest: "{{ user_home_dir }}/.bashrc"
+
+- name: create .inputrc
+  template:
+    src: .inputrc.j2
+    dest: "{{ user_home_dir }}/.inputrc"
+
+- name: create .bash_alias
+  template:
+    src: .bash_alias.j2
+    dest: "{{ user_home_dir }}/.bash_alias"
+
+- name: create .bash_profile
+  template:
+    src: .bash_profile.j2
+    dest: "{{ user_home_dir }}/.bash_profile"
+
+- name: create .gitconfig
+  template:
+    src: .gitconfig.j2
+    dest: "{{ user_home_dir }}/.gitconfig"
+
+- name: create .gitignore_global
+  template:
+    src: .gitignore_global.j2
+    dest: "{{ user_home_dir }}/.gitignore_global"
+
+###############################################################################
+# Finder
+###############################################################################
+- name: Finder Show dotfiles
+  osx_defaults:
+    domain: "com.apple.finder"
+    key: "AppleShowAllFiles"
+    type: bool
+    value: true
+  notify: restart Finder
+
+- name: Finder Show Pathbar
+  osx_defaults:
+    domain: "com.apple.finder"
+    key: "ShowPathbar"
+    type: bool
+    value: true
+  notify: restart Finder
+
+- name: Finder Show StatusBar
+  osx_defaults:
+    domain: "com.apple.finder"
+    key: "ShowStatusBar"
+    type: bool
+    value: true
+  notify: restart Finder
+
+# ネットワーク接続時の.DS_Store作成を抑制
+# defaults write com.apple.desktopservices DSDontWriteNetworkStores true
+- name: DSDontWriteNetworkStores
+  osx_defaults:
+    domain: com.apple.desktopservices
+    key: DSDontWriteNetworkStores
+    type: bool
+    value: true
+
+- name: スクリーンショットのファイル名から日本語を削除
+  osx_defaults:
+    domain: "com.apple.screencapture"
+    key: "name"
+    type: string
+    value: ""
+
+- name: スワイプを普通の向きにする
+  osx_defaults:
+    key: "com.apple.swipescrolldirection"
+    type: bool
+    value: false
+
+#- name: スクリーンキャプチャの保存先を Pictures フォルダにする
+#  osx_defaults:
+#    domain: "com.apple.screencapture"
+#    name: location
+#    type: string
+#    value: ~/Pictures
+
+- name: 保存先を指定するダイアログを簡易的なものにしない
+  osx_defaults:
+    key: "NSNavPanelExpandedStateForSaveMode"
+    type: bool
+    value: true
+
+#- name: 未確認のアプリケーションを実行する際のダイアログを無効にする
+#  osx_defaults:
+#    key: "com.apple.LaunchServices"
+#    name: LSQuarantine
+#    type: bool
+#    value: false

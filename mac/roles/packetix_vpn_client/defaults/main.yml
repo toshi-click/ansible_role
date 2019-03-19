@@ -1,0 +1,16 @@
+---
+login_user_name: toshi
+# URLなどは http://www.packetix-download.com/ja.aspx で確認のこと
+packetix_vpn_client_version: "v4.25-9656-rtm-2018.01.15"
+packetix_vpn_client_base_url: "https://jp.packetix-download.com/files/packetix/{{ packetix_vpn_client_version }}-tree/Mac_OS_X/PacketiX_VPN_Client/64bit_-_Intel_x64_or_AMD64/vpnclient-{{ packetix_vpn_client_version }}-macos-x64-64bit.tar.gz"
+packetix_vpn_client_filename: "vpnclient-{{ packetix_vpn_client_version }}-macos-x64-64bit.tar.gz"
+packetix_vpn_install_dir: "/Users/{{ login_user_name }}"
+
+# 以下は環境ごとにプレイブック側で再設定
+# グローバル側のIP？
+packetix_vpn_global_default_route_ip: 172.20.10.1
+# 自分のVLANのデフォルトゲートウェイ
+packetix_vpn_local_default_route_ip: 192.168.41.1
+# VPNで接続したいサーバーアドレス
+packetix_vpn_connect_ip: 122.249.94.217
+

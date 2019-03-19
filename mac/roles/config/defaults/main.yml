@@ -1,0 +1,3 @@
+---
+login_user_name: toshi
+user_home_dir: "/Users/{{ login_user_name }}"

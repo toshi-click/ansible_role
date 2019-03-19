@@ -1,0 +1,43 @@
+#/bin/bash -x
+
+# VPNコマンド配置ディレクトリ
+VPN_DIR={{ packetix_vpn_install_dir }}
+
+# 外部NWのデフォルトGW IP
+GLOBAL_DEFAULT_ROUTE_IP="{{ packetix_vpn_global_default_route_ip }}"
+
+# 社内NWのデフォルトGWIP
+SWITCH_DEFAULT_ROUTE_IP="{{ packetix_vpn_local_default_route_ip }}"
+
+# 社内DNSサーバのIP
+DNS_SERVER_IP="192.168.100.53 192.168.100.153"
+
+# 移動
+cd {{ packetix_vpn_install_dir }}
+
+# VPNクライアント起動
+sudo ./vpnclient start
+sleep 10
+
+# DHCPでIP取得
+sudo ipconfig set tap0 DHCP
+
+# DHCPでIP割り振りを待つ
+sleep 10
+
+# VPN Serverへの接続が切れないように静的ルーティングを追加 → 外部NWへの接続設定を静的に設定(後にデフォルトは消すから)
+sudo route add -net {{ packetix_vpn_connect_ip }} $GLOBAL_DEFAULT_ROUTE_IP 255.255.255.255
+
+# 既存のデフォルトゲートウェイの削除
+sudo route delete default $GLOBAL_DEFAULT_ROUTE_IP
+
+# DHCPで設定されるデフォルトゲートウェイはうまく機能しないので、手動でデフォルトゲートウェイを追加
+# ↓
+# スイッチのGW IPを追加(IPが192.168.1.xxだったら192.168.1.1)
+sudo route add default $SWITCH_DEFAULT_ROUTE_IP
+
+# うまくDNS設定されないようなので固定設定(必要な設定だけ有効にしてください)
+networksetup -setdnsservers Wi-Fi $DNS_SERVER_IP 8.8.8.8
+
+# DNSキャッシュをクリアしないと、社内サーバのドメインがうまく引けなかった
+sudo killall -SIGKILL mDNSResponder

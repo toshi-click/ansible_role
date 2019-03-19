@@ -1,0 +1,43 @@
+---
+# tuntapが仮想LANカードの作成に必要になるのでいれる
+- name: homebrew cask tuntap packages install
+  homebrew_cask: name=tuntap state=installed
+  # ※1 GUIツールをインストールする場所を `/Application` に固定
+  environment:
+    HOMEBREW_CASK_OPTS: "--appdir=/Applications"
+
+# PacketiX VPN Clientのソースコードをダウンロードする
+- name: Download the PacketiX VPN Client source code
+  get_url:
+    url: "{{ packetix_vpn_client_base_url }}"
+    dest: "/tmp/{{ packetix_vpn_client_filename }}"
+  register: result_packetix_get_url
+
+- name: "make PacketiX VPN Client dir"
+  file:
+    dest: "{{ packetix_vpn_install_dir }}"
+    state: directory
+  when: result_packetix_get_url.changed
+
+# ダウンロードファイルを解凍する
+- name: Unzip the PacketiX VPN Client download file
+  unarchive: >
+    src=/tmp/{{ packetix_vpn_client_filename }}
+    dest={{ packetix_vpn_install_dir }}
+  when: result_packetix_get_url.changed
+  register: unarchive
+
+# PacketiX VPN Clientのコンパイル・インストール
+- name: make PacketiX VPN Client
+  shell: yes 1 | make
+  args:
+    chdir: "{{ packetix_vpn_install_dir }}/vpnclient"
+  when: unarchive.changed
+  register: make
+
+- name: vpn_connect.sh set
+  template:
+    src: "vpn_connect.sh.j2"
+    dest: "{{ packetix_vpn_install_dir }}/vpnclient/vpn_connect.sh"
+    owner: "{{ login_user_name }}"
+    mode: 0755
