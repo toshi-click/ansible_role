@@ -13,4 +13,3 @@ packetix_vpn_global_default_route_ip: 172.20.10.1
 packetix_vpn_local_default_route_ip: 192.168.41.1
 # VPNで接続したいサーバーアドレス
 packetix_vpn_connect_ip: 122.249.94.217
-
