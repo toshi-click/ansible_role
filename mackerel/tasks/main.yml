@@ -1,41 +1,7 @@
-- name: Import GPG Key
-  rpm_key:
-    state: present
-    key: https://mackerel.io/file/cert/GPG-KEY-mackerel-v2
+- include: CentOS.yml
+  when: ansible_distribution == "CentOS"
+  tags: mackerel
 
-- name: "Install mackerel repo(CentOS7)"
-  template:
-    src: "mackerel.repo.j2"
-    dest: "/etc/yum.repos.d/mackerel.repo"
-    owner: root
-    group: root
-    mode: 0644
-
-- name: Install yum mackerel angent
-  yum:
-    name: mackerel-agent
-    state: present
-
-- name: Configure /etc/mackerel-agent/mackerel-agent.conf
-  command: mackerel-agent init -apikey="{{ monitoring.mackerelKey }}"
-
-- name: Start mackerel-agent
-  service:
-    name: mackerel-agent
-    state: started
-    enabled: yes
-
-- name: Install yum mackerel plugins
-  yum:
-    name: mackerel-check-plugins
-    state: present
-
-- name: Install yum mackerel-check-plugins
-  yum:
-    name: mackerel-check-plugins
-    state: present
-
-- name: Install yum mkr
-  yum:
-    name: mkr
-    state: present
+- include: Ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+  tags: mackerel

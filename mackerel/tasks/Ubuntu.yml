@@ -1,0 +1,72 @@
+---
+- name: Import mackerel GPG key v2
+  apt_key:
+    url: https://mackerel.io/file/cert/GPG-KEY-mackerel-v2
+    state: present
+  become: yes
+
+- name: Add repository mackerel v2
+  apt_repository:
+    repo: 'deb http://apt.mackerel.io/v2/ mackerel contrib'
+    state: present
+    update_cache: yes
+  failed_when:
+    - ansible_distribution != 'Ubuntu'
+  become: yes
+
+- name: Install mackerel-agent
+  apt:
+    name: mackerel-agent
+    state: latest
+    update_cache: yes
+    force: yes
+    dpkg_options: 'force-confdef,force-confold'
+  become: yes
+
+- name: Install mackerel-agent-plugins
+  apt:
+    name: mackerel-agent-plugins
+    state: latest
+    update_cache: yes
+    force: yes
+    dpkg_options: 'force-confdef,force-confold'
+  when: mackerel_use_plugins
+  become: yes
+
+- name: Install mackerel-check-plugins
+  apt:
+    name: mackerel-check-plugins
+    state: latest
+    update_cache: yes
+    force: yes
+    dpkg_options: 'force-confdef,force-confold'
+  when: mackerel_use_plugins
+  become: yes
+
+#- name: Update agent config
+#  template:
+#    src: mackerel-agent.conf.j2
+#    dest: /etc/mackerel-agent/mackerel-agent.conf
+#  become: yes
+
+# ホスト縮退時に自動退役させる設定
+- name: Set auto-retirement agent
+  template:
+    src: auto-retirement.conf.j2
+    dest: /etc/default/mackerel-agent
+  become: yes
+  when: auto_retirement
+
+- name: Apply mackerel-agent conf
+  systemd:
+    name: mackerel-agent.service
+    state: reloaded
+  become: yes
+
+- name: Enable mackerel-agent
+  systemd:
+    state: started
+    daemon_reload: yes
+    enabled: yes
+    name: mackerel-agent.service
+  become: yes

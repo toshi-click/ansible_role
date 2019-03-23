@@ -1,0 +1,4 @@
+---
+mackerel_use_plugins: yes
+mackerel_agent_start_on_setup: yes
+auto_retirement: no
