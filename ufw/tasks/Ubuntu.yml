@@ -1,0 +1,11 @@
+---
+# tasks file for ufw (Ubuntu specific)
+- name: Install ufw packages
+  apt:
+    pkg: ufw
+    state: present
+    update_cache: yes
+  tags: ufw
+  notify:
+    - enable ufw
+    - restart ufw
