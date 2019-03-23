@@ -1,0 +1,17 @@
+---
+- name: install the 'Development tools' package group
+  package:
+    name: "@Development tools"
+    state: present
+
+- name: mailx install
+  package:
+    name: mailx
+    state: present
+  tags: dev_tool_install
+
+- name: bind-utils install
+  package:
+    name: bind-utils
+    state: present
+  tags: dev_tool_install

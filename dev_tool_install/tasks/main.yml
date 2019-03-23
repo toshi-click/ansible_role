@@ -1,56 +1,98 @@
-- name: install the 'Development tools' package group
-  package:
-    name: "@Development tools"
-    state: present
-  when: "ansible_os_family == 'RedHat'"
+- include: CentOS.yml
+  when: ansible_distribution == "CentOS"
+  tags: dev_tool_install
+
+- include: Ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+  tags: dev_tool_install
 
 # パッケージインストール-----------------------------------------------------------------------------------------
 - name: wget install
   package:
     name: wget
     state: present
+  tags: dev_tool_install
 
 - name: tree install
   package:
     name: tree
     state: present
+  tags: dev_tool_install
 
 - name: git install
   package:
     name: git
     state: present
-
-- name: mailx install
-  package:
-    name: mailx
-    state: present
+  tags: dev_tool_install
 
 - name: sudo install
   package:
     name: sudo
     state: present
+  tags: dev_tool_install
 
 - name: net-tools install
   package:
     name: net-tools
     state: present
-
-- name: bind-utils install
-  package:
-    name: bind-utils
-    state: present
+  tags: dev_tool_install
 
 - name: htop install
   package:
     name: htop
     state: present
+  tags: dev_tool_install
 
 - name: nmap install
   package:
     name: nmap
     state: present
+  tags: dev_tool_install
 
 - name: bash-completion install
   package:
     name: bash-completion
     state: present
+  tags: dev_tool_install
+
+- name: vim install
+  package:
+    name: vim
+    state: present
+  tags: dev_tool_install
+
+- name: curl install
+  package:
+    name: curl
+    state: present
+  tags: dev_tool_install
+
+- name: zip install
+  package:
+    name: zip
+    state: present
+  tags: dev_tool_install
+
+- name: unzip install
+  package:
+    name: unzip
+    state: present
+  tags: dev_tool_install
+
+- name: net-tools install
+  package:
+    name: net-tools
+    state: present
+  tags: dev_tool_install
+
+- name: iproute2 install
+  package:
+    name: iproute2
+    state: present
+  tags: dev_tool_install
+
+- name: iputils-ping install
+  package:
+    name: iputils-ping
+    state: present
+  tags: dev_tool_install

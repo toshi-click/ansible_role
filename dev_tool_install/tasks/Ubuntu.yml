@@ -1,0 +1,6 @@
+---
+- name: mailutils install
+  package:
+    name: mailutils
+    state: present
+  tags: dev_tool_install
