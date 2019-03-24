@@ -84,15 +84,3 @@
     name: net-tools
     state: present
   tags: dev_tool_install
-
-- name: iproute2 install
-  package:
-    name: iproute2
-    state: present
-  tags: dev_tool_install
-
-- name: iputils-ping install
-  package:
-    name: iputils-ping
-    state: present
-  tags: dev_tool_install
