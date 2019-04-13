@@ -45,21 +45,24 @@
   notify: 'restart dock'
 
 # キーリピートの速度を爆速に
-- name: "キーリピート検知待ち時間"
+# キーリピート検知待ち時間
+- name: key repeat detection waiting time
   osx_defaults:
     key: InitialKeyRepeat
     type: int
     value: 50
     state: present
 
-- name: "キーリピート間隔時間"
+# キーリピート間隔時間
+- name: key repeat interval time
   osx_defaults:
     key: KeyRepeat
     type: int
     value: 5
     state: present
 
-- name: "バッテリー残量設定"
+# バッテリー残量設定
+- name: battery balance amount preference
   osx_defaults:
     domain: com.apple.menuextra.battery
     key: ShowPercent
@@ -67,7 +70,8 @@
     value: YES
     state: present
 
-- name: "時刻表示設定"
+# 時刻表示設定
+- name: time display preference
   osx_defaults:
     domain: com.apple.menuextra.clock
     key: DateFormat
@@ -75,7 +79,8 @@
     value: "M\\U6708d\\U65e5(EEE)  H:mm:ss"
     state: present
 
-- name: "トラックパッド右クリックの有効化"
+# トラックパッド右クリックの有効化
+- name: truck pad right-click activation
   osx_defaults:
     domain: com.apple.AppleMultitouchTrackpad
     key: TrackpadCornerSecondaryClick
@@ -83,7 +88,8 @@
     value: 2
     state: present
 
-- name: "トラックパッドタップの有効化"
+# トラックパッドタップの有効化
+- name: truck pad tap activation
   osx_defaults:
     domain: com.apple.AppleMultitouchTrackpad
     key: Clicking
@@ -91,7 +97,8 @@
     value: 1
     state: present
 
-- name: "ライブ変換の無効化"
+# ライブ変換の無効化
+- name: live converting invalidation
   osx_defaults:
     domain: com.apple.inputmethod.Kotoeri
     key: JIMPrefLiveConversionKey
@@ -198,14 +205,16 @@
     type: bool
     value: true
 
-- name: スクリーンショットのファイル名から日本語を削除
+# スクリーンショットのファイル名から日本語を削除
+- name: screenshot filename from Japanese deletion
   osx_defaults:
     domain: "com.apple.screencapture"
     key: "name"
     type: string
     value: ""
 
-- name: スワイプを普通の向きにする
+# スワイプを普通の向きにする
+- name: make facing normal swipe
   osx_defaults:
     key: "com.apple.swipescrolldirection"
     type: bool
@@ -218,7 +227,8 @@
 #    type: string
 #    value: ~/Pictures
 
-- name: 保存先を指定するダイアログを簡易的なものにしない
+# 保存先を指定するダイアログを簡易的なものにしない
+- name: save target specify dialog simple do not
   osx_defaults:
     key: "NSNavPanelExpandedStateForSaveMode"
     type: bool

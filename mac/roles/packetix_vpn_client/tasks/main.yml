@@ -8,12 +8,14 @@
 
 # PacketiX VPN Clientのソースコードをダウンロードする
 - name: Download the PacketiX VPN Client source code
+  become: yes
   get_url:
     url: "{{ packetix_vpn_client_base_url }}"
     dest: "/tmp/{{ packetix_vpn_client_filename }}"
   register: result_packetix_get_url
 
 - name: "make PacketiX VPN Client dir"
+  become: yes
   file:
     dest: "{{ packetix_vpn_install_dir }}"
     state: directory
@@ -21,6 +23,7 @@
 
 # ダウンロードファイルを解凍する
 - name: Unzip the PacketiX VPN Client download file
+  become: yes
   unarchive: >
     src=/tmp/{{ packetix_vpn_client_filename }}
     dest={{ packetix_vpn_install_dir }}
@@ -29,6 +32,7 @@
 
 # PacketiX VPN Clientのコンパイル・インストール
 - name: make PacketiX VPN Client
+  become: yes
   shell: yes 1 | make
   args:
     chdir: "{{ packetix_vpn_install_dir }}/vpnclient"
@@ -36,6 +40,7 @@
   register: make
 
 - name: vpn_connect.sh set
+  become: yes
   template:
     src: "vpn_connect.sh.j2"
     dest: "{{ packetix_vpn_install_dir }}/vpnclient/vpn_connect.sh"
