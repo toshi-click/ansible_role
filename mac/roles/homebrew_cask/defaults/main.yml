@@ -16,7 +16,6 @@ homebrew_cask_packages:
   - name: sourcetree
   - name: docker
   - name: postico
-  - name: android-studio
   - name: intellij-idea
   - name: homebrew/cask-versions/firefox-developer-edition
   - name: keepassxc
@@ -31,3 +30,9 @@ homebrew_cask_packages:
   - name: discord
   - name: bluestacks
   - name: microsoft-office
+  # android
+  - name: android-studio
+  - name: genymotion
+  - name: java8
+  # reactnative
+  - name: watchman
