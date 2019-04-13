@@ -116,58 +116,58 @@
     line: '%admin ALL = (ALL) NOPASSWD: ALL'
     validate: 'visudo -cf %s'
 
-- homebrew:
-    name: bash
-    path: /usr/local/bin/
-    state: present
-  when: ansible_os_family == 'Darwin'
-
-- name: check if exists bash on macOS
-  command: /usr/local/bin/bash --version
-  register: check_bash_version
-  when: ansible_os_family == 'Darwin'
-  changed_when: no
-
-- name: change shell
-  become: yes
-  command: "chsh -s '/usr/local/bin/bash' {{ login_user_name }}"
-  when: ansible_os_family == 'Darwin' and check_bash_version.rc == 0
-
-- name: "~/.ssh/config を設定"
-  template:
-    src: ".ssh/config"
-    dest: "{{ user_home_dir }}/.ssh/config"
-    mode: 0644
-
-- name: create .bashrc
-  template:
-    src: .bashrc.j2
-    dest: "{{ user_home_dir }}/.bashrc"
-
-- name: create .inputrc
-  template:
-    src: .inputrc.j2
-    dest: "{{ user_home_dir }}/.inputrc"
-
-- name: create .bash_alias
-  template:
-    src: .bash_alias.j2
-    dest: "{{ user_home_dir }}/.bash_alias"
-
-- name: create .bash_profile
-  template:
-    src: .bash_profile.j2
-    dest: "{{ user_home_dir }}/.bash_profile"
-
-- name: create .gitconfig
-  template:
-    src: .gitconfig.j2
-    dest: "{{ user_home_dir }}/.gitconfig"
-
-- name: create .gitignore_global
-  template:
-    src: .gitignore_global.j2
-    dest: "{{ user_home_dir }}/.gitignore_global"
+#- homebrew:
+#    name: bash
+#    path: /usr/local/bin/
+#    state: present
+#  when: ansible_os_family == 'Darwin'
+#
+#- name: check if exists bash on macOS
+#  command: /usr/local/bin/bash --version
+#  register: check_bash_version
+#  when: ansible_os_family == 'Darwin'
+#  changed_when: no
+#
+#- name: change shell
+#  become: yes
+#  command: "chsh -s '/usr/local/bin/bash' {{ login_user_name }}"
+#  when: ansible_os_family == 'Darwin' and check_bash_version.rc == 0
+#
+#- name: "~/.ssh/config を設定"
+#  template:
+#    src: ".ssh/config"
+#    dest: "{{ user_home_dir }}/.ssh/config"
+#    mode: 0644
+#
+#- name: create .bashrc
+#  template:
+#    src: .bashrc.j2
+#    dest: "{{ user_home_dir }}/.bashrc"
+#
+#- name: create .inputrc
+#  template:
+#    src: .inputrc.j2
+#    dest: "{{ user_home_dir }}/.inputrc"
+#
+#- name: create .bash_alias
+#  template:
+#    src: .bash_alias.j2
+#    dest: "{{ user_home_dir }}/.bash_alias"
+#
+#- name: create .bash_profile
+#  template:
+#    src: .bash_profile.j2
+#    dest: "{{ user_home_dir }}/.bash_profile"
+#
+#- name: create .gitconfig
+#  template:
+#    src: .gitconfig.j2
+#    dest: "{{ user_home_dir }}/.gitconfig"
+#
+#- name: create .gitignore_global
+#  template:
+#    src: .gitignore_global.j2
+#    dest: "{{ user_home_dir }}/.gitignore_global"
 
 ###############################################################################
 # Finder
