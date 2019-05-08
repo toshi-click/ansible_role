@@ -29,7 +29,7 @@ homebrew_cask_packages:
   - name: minikube
   - name: discord
   - name: bluestacks
-  - name: microsoft-office
+#  - name: microsoft-office
   # android
   - name: android-studio
   - name: genymotion
