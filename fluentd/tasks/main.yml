@@ -39,6 +39,12 @@
   notify:
     - restart fluentd
 
+# fluent-plugin-google-cloudのインストールにgccが必要
+- name: gcc install
+  package:
+    name: gcc
+    state: latest
+
 # よく使うプラグイン導入
 - name: plugin To Use Often
   command: td-agent-gem install {{ item }}
@@ -49,6 +55,7 @@
     - fluent-plugin-slack
     - fluent-plugin-tail-ex
     - fluent-plugin-mail
+    - fluent-plugin-google-cloud
 
 - name: custom td-agent.service set
   template:
@@ -58,9 +65,10 @@
     group: root
     mode: 0644
 
-# servicedの再読込（/etc/systemd/system/のファイルを変更した場合に必須）
-- name: daemon reload
-  shell: systemctl daemon-reload
+# systemdにconfigsを読み直すように強制する
+- name: just force systemd to reread configs
+  systemd:
+    daemon_reload: yes
 
 - name: "create directory /etc/td-agent/certs"
   file:
