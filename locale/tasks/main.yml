@@ -15,7 +15,7 @@
       state: latest
 
   - name: "set-locale"
-    shell: localectl set-locale LANG=ja_JP.UTF-8 LANGUAGE="ja_JP:ja"
+    shell: update-locale LANG=ja_JP.UTF-8
 
   - name: manpages-ja-dev install
     package:
@@ -40,7 +40,8 @@
 
   - name: "ubuntu-ja repo set"
     get_url:
-      url: https://www.ubuntulinux.jp/sources.list.d/$(lsb_release -cs).list
+#      url: "https://www.ubuntulinux.jp/sources.list.d/$(lsb_release -cs).list"
+      url: "https://www.ubuntulinux.jp/sources.list.d/bionic.list"
       dest: /etc/apt/sources.list.d/ubuntu-ja.list
       owner: root
       group: root
