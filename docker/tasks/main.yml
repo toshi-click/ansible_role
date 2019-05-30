@@ -145,7 +145,7 @@
 
   - name: "docker-compose Download"
     get_url:
-      url: "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-{{ansible_system}}-{{ansible_machine}}"
+      url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-{{ansible_system}}-{{ansible_machine}}"
       dest: /usr/bin/docker-compose
       owner: root
       group: root
