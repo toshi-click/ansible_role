@@ -174,8 +174,10 @@
 
 # systemdにconfigsを読み直すように強制する
 # servicedの再読込（/etc/systemd/system/のファイルを変更した場合に必須）
-- name: just force systemd to reread configs (2.4 and above)
-  systemd: daemon_reload=yes
+- name: just force systemd to reread configs
+  systemd:
+    daemon_reload: yes
+  ignore_errors: true
 
 # OSで分岐の必要のない処理
 - name: enable docker
