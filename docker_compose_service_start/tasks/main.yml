@@ -1,50 +1,11 @@
-# 実行したい場合はvarファイルのservice:に下記var足してください
-# service:
-#   docker:
-#     compose_dir: "/export/www/i-tenpo.com/docker/dev_service"
-- name: restart docker
-  service:
-    name: docker
-    state: restarted
-
 - name: docker container update
   shell: 'docker images | cut -d " " -f1 | tail -n +2 | sort | uniq | egrep -v "^(<none>|ubuntu)$" | xargs -P0 -L1 docker pull'
   ignore_errors: true
 
-# Debian・Ubuntu向け設定
-- block:
-  - name: "do {{ service.docker.compose_dir }}/docker-compose pull"
-    shell: /usr/bin/docker-compose pull
-    args:
-      chdir: "{{ service.docker.compose_dir }}"
+- include: CentOS.yml
+  when: ansible_distribution == "CentOS"
+  tags: docker_compose
 
-  - name: "do {{ service.docker.compose_dir }}/docker-compose build"
-    shell: /usr/bin/docker-compose build
-    args:
-      chdir: "{{ service.docker.compose_dir }}"
-
-  - name: "do {{ service.docker.compose_dir }}/docker-compose up -d --force-recreate"
-    shell: /usr/bin/docker-compose up -d --force-recreate
-    args:
-      chdir: "{{ service.docker.compose_dir }}"
-  # Debian・Ubuntu向け設定ここまで
-  when: "ansible_os_family == 'Debian'"
-
-# CentOS向け設定
-- block:
-  - name: "do {{ service.docker.compose_dir }}/docker-compose pull"
-    shell: /usr/local/bin/docker-compose pull
-    args:
-      chdir: "{{ service.docker.compose_dir }}"
-
-  - name: "do {{ service.docker.compose_dir }}/docker-compose build"
-    shell: /usr/local/bin/docker-compose build
-    args:
-      chdir: "{{ service.docker.compose_dir }}"
-
-  - name: "do {{ service.docker.compose_dir }}/docker-compose up -d --force-recreate"
-    shell: /usr/local/bin/docker-compose up -d --force-recreate
-    args:
-      chdir: "{{ service.docker.compose_dir }}"
-  # CentOS向けここまで
-  when: "ansible_os_family == 'RedHat'"
+- include: Ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+  tags: docker_compose
