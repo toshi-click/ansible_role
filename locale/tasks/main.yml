@@ -15,7 +15,37 @@
       state: latest
 
   - name: "set-locale"
-    shell: localectl set-locale LANG=ja_JP.UTF-8 LANGUAGE="ja_JP:ja"
+    shell: update-locale LANG=ja_JP.UTF-8
+
+  - name: manpages-ja-dev install
+    package:
+      name: manpages-ja-dev
+      state: latest
+
+  - name: manpages-ja install
+    package:
+      name: manpages-ja
+      state: latest
+
+  # Ubuntu Japanese Teamリポジトリを追加する
+  - name: set ubuntu-ja-archive gpg key
+    apt_key:
+      url: "https://www.ubuntulinux.jp/ubuntu-ja-archive-keyring.gpg"
+      state: present
+
+  - name: set ubuntu-jp-ppa-keyring gpg key
+    apt_key:
+      url: "https://www.ubuntulinux.jp/ubuntu-jp-ppa-keyring.gpg"
+      state: present
+
+  - name: "ubuntu-ja repo set"
+    get_url:
+#      url: "https://www.ubuntulinux.jp/sources.list.d/$(lsb_release -cs).list"
+      url: "https://www.ubuntulinux.jp/sources.list.d/bionic.list"
+      dest: /etc/apt/sources.list.d/ubuntu-ja.list
+      owner: root
+      group: root
+      mode: 0644
 
   # Debian・Ubuntu向け設定ここまで
   when: "ansible_os_family == 'Debian'"

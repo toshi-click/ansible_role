@@ -1,33 +1,10 @@
-# Debian・Ubuntu向け設定
-- block:
-    - name: get Debian fluentd install shell
-      get_url:
-        url: "https://toolbelt.treasuredata.com/sh/install-ubuntu-xenial-td-agent3.sh"
-        dest: /usr/local/src/install-ubuntu-xenial-td-agent3.sh
-        mode: 0755
+- include: CentOS.yml
+  when: ansible_distribution == "CentOS"
+  tags: fluentd
 
-    - name: run Debian fluentd install shell
-      shell: bash /usr/local/src/install-ubuntu-xenial-td-agent3.sh
-  # Debian・Ubuntu向け設定ここまで
-  when: "ansible_os_family == 'Debian'"
-
-# CentOS向け設定
-- block:
-    - name: get RedHat fluentd install shell
-      get_url:
-        url: "https://toolbelt.treasuredata.com/sh/install-redhat-td-agent3.sh"
-        dest: /usr/local/src/install-redhat-td-agent3.sh
-        mode: 0755
-
-    - name: run RedHat fluentd install shell
-      shell: bash /usr/local/src/install-redhat-td-agent3.sh
-  # CentOS向けここまで
-  when: "ansible_os_family == 'RedHat'"
-
-- name: enable fluentd
-  service:
-    name: td-agent
-    enabled: yes
+- include: Ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+  tags: fluentd
 
 - name: custom fluentd Plugin set
   template:
@@ -69,6 +46,7 @@
 - name: just force systemd to reread configs
   systemd:
     daemon_reload: yes
+  ignore_errors: true
 
 - name: "create directory /etc/td-agent/certs"
   file:
