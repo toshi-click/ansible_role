@@ -1,0 +1,33 @@
+---
+- name: debconf-utils install
+  package:
+    name: debconf-utils
+    state: present
+
+- name: unattended-upgrades install
+  package:
+    name: unattended-upgrades
+    state: present
+
+- name: apt-listchanges install
+  package:
+    name: apt-listchanges
+    state: present
+#  $ echo 'unattended-upgrades unattended-upgrades/enable_auto_updates boolean true' \
+#  | sudo debconf-set-selections
+#  $ sudo dpkg-reconfigure -f noninteractive -plow unattended-upgrades
+- name: create APT auto-upgrades configuration
+  template:
+    src: auto-upgrades.j2
+    dest: /etc/apt/apt.conf.d/20auto-upgrades
+    owner: root
+    group: root
+    mode: 0644
+
+- name: create unattended-upgrades configuration
+  template:
+    src: unattended-upgrades.j2
+    dest: /etc/apt/apt.conf.d/50unattended-upgrades
+    owner: root
+    group: root
+    mode: 0644

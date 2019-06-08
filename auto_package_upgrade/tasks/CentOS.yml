@@ -1,3 +1,4 @@
+---
 - name: yum-cron install
   package:
     name: yum-cron
@@ -27,3 +28,9 @@
     owner: root
     group: root
     mode: 0755
+
+- name: restart yum-cron
+  service:
+    name: yum-cron
+    state: restarted
+    enabled: yes
