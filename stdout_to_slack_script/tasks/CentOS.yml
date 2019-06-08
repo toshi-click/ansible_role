@@ -1,0 +1,6 @@
+---
+# JSON形式のデータを見やすく表示したり、データを抽出したりするコマンド。
+- name: jq install
+  package:
+    name: jq
+    state: latest

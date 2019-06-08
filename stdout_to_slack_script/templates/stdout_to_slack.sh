@@ -1,9 +1,9 @@
 #!/bin/bash
 
 TEXT=$(cat -)
-WEBHOOK_URL="{{ stdout_to_slack_web_hook_url }}"
-CHANNEL="{{ stdout_to_slack_channel }}"
-ICON="{{ stdout_to_slack_icon }}"
+WEBHOOK_URL="{{ slack_web_hook_url }}"
+CHANNEL="{{ slack_channel }}"
+ICON="{{ slack_icon }}"
 USERNAME="$(hostname)"
 TEXT_PREFIX="[$(date '+%Y-%m-%d %H:%M:%S %Z')] "
 

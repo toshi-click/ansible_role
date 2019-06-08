@@ -1,0 +1,5 @@
+---
+script_dir: "/tmp/script"
+slack_web_hook_url: ""
+slack_channel: "general"
+slack_icon: ":alien:"
