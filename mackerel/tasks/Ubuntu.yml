@@ -43,12 +43,6 @@
   when: mackerel_use_plugins
   become: yes
 
-#- name: Update agent config
-#  template:
-#    src: mackerel-agent.conf.j2
-#    dest: /etc/mackerel-agent/mackerel-agent.conf
-#  become: yes
-
 # ホスト縮退時に自動退役させる設定
 - name: Set auto-retirement agent
   template:
