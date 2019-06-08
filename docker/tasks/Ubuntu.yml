@@ -1,0 +1,63 @@
+---
+- name: apt-transport-https install
+  package:
+    name: apt-transport-https
+    state: present
+
+- name: ca-certificates install
+  package:
+    name: ca-certificates
+    state: present
+
+- name: curl install
+  package:
+    name: curl
+    state: present
+
+- name: software-properties-common install
+  package:
+    name: software-properties-common
+    state: present
+
+- name: set dockers official gpg key
+  apt_key:
+    url: "https://download.docker.com/linux/ubuntu/gpg"
+    state: present
+  register: set_key
+
+- name: set up the stable repository
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+    state: present
+  when: set_key
+  register: set_repo
+
+- name: install docker-ce
+  apt: pkg=docker-ce state=present update_cache=yes
+  when: set_repo
+
+- name: "docker-compose Download"
+  get_url:
+    url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-{{ansible_system}}-{{ansible_machine}}"
+    dest: /usr/bin/docker-compose
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "docker-compose permission set"
+  file:
+    path: /usr/bin/docker-compose
+    owner: root
+    group: root
+    mode: 0755
+
+- name: docker.service set
+  template:
+    src: "ubuntu_docker.service"
+    dest: /etc/systemd/system/docker.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - enable docker
+    - restart docker

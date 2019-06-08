@@ -1,0 +1,96 @@
+- name: device-mapper-persistent-data install
+  package:
+    name: device-mapper-persistent-data
+    state: present
+
+## docker ceのリポジトリ追加
+- name: install yum-utils
+  package:
+    name: yum-utils
+    state: present
+
+- name: lvm2 install
+  package:
+    name: lvm2
+    state: present
+
+# latest docker install ##################################################################################
+# Docker関連パッケージを一旦削除
+- name: docker remove
+  package:
+    name: docker
+    state: absent
+
+#- name: Add Docker GPG key.
+#  rpm_key:
+#    key: https://download.docker.com/linux/centos/gpg
+#    state: present
+
+- name: Add Docker CE repository
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docker-ce.repo
+    force: yes
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Enable Docker Edge repo
+  ini_file:
+    dest: /etc/yum.repos.d/docker-ce.repo
+    section: 'docker-ce-edge'
+    option: enabled
+    value: 0
+
+- name: Enable Docker Test repo
+  ini_file:
+    dest: /etc/yum.repos.d/docker-ce.repo
+    section: 'docker-ce-test'
+    option: enabled
+    value: 0
+
+- name: Enable Docker Stable repo
+  ini_file:
+    dest: /etc/yum.repos.d/docker-ce.repo
+    section: 'docker-ce-stable'
+    option: enabled
+    value: 0
+
+- name: test
+  shell: cat /etc/yum.repos.d/docker-ce.repo
+
+- name: "docker ce install"
+  yum:
+    name: docker-ce
+    state: present
+    enablerepo: docker-ce-stable
+  notify:
+    - enable docker
+    - restart docker
+
+- name: "docker-compose Download"
+  get_url:
+    url: "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-{{ansible_system}}-{{ansible_machine}}"
+    dest: /usr/bin/docker-compose
+    owner: root
+    group: root
+    mode: 0755
+  tags: docker
+
+- name: "docker-compose permission set"
+  file:
+    path: /usr/bin/docker-compose
+    owner: root
+    group: root
+    mode: 0755
+
+- name: docker.service set
+  template:
+    src: "RH_docker.service"
+    dest: /etc/systemd/system/docker.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - enable docker
+    - restart docker
