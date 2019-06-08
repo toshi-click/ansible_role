@@ -10,10 +10,10 @@ $ENV{'PATH'} = '/bin:/usr/bin';
 delete @ENV{'IFS', 'CDPATH', 'ENV', 'BASH_ENV'};
 
 my $curl     = '/usr/bin/curl -s --data-urlencode';
-my $hookurl = '{{ slack.web_hook_url }}';
-my $channel  = '#{{ slack.channel }}',
+my $hookurl = '{{ slack_web_hook_url }}';
+my $channel  = '#{{ slack_channel }}',
 my $username = '{{ host.name }} bot',
-my $iconemoji  = '{{ slack.icon }}',
+my $iconemoji  = '{{ slack_icon }}',
 
 my $rawmail = join '', <STDIN>;
 

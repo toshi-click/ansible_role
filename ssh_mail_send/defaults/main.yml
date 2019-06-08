@@ -1,0 +1,6 @@
+---
+script_dir: "/tmp/script"
+ssh_mail_send_send: "false"
+ssh_mail_send_trust_list_file: /tmp/ssh_trust_list
+ssh_mail_send_no_send_ip_list:
+  - {ip: 127.0.0.1}
