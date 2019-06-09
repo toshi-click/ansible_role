@@ -8,9 +8,14 @@ Wants=network-online.target
 User={{ fluentd_user }}
 Group={{ fluentd_group }}
 LimitNOFILE=65536
+{% if fluentd_gcp_flag == true %}
+Environment=GOOGLE_APPLICATION_CREDENTIALS={{ fluentd_gcp_key_file }}
+{% endif %}
+{% if fluentd_aws_glag == true %}
 Environment=AWS_REGION={{ fluentd_aws_region }}
 Environment=AWS_ACCESS_KEY_ID={{ fluentd_aws_access_key_id }}
 Environment=AWS_SECRET_ACCESS_KEY={{ fluentd_aws_secret_access_key }}
+{% endif %}
 Environment=LD_PRELOAD=/opt/td-agent/embedded/lib/libjemalloc.so
 Environment=GEM_HOME=/opt/td-agent/embedded/lib/ruby/gems/2.4.0/
 Environment=GEM_PATH=/opt/td-agent/embedded/lib/ruby/gems/2.4.0/

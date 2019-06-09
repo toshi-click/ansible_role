@@ -8,31 +8,24 @@
 
 - name: custom fluentd Plugin set
   template:
-    src: "filter_ngrep.rb.j2"
+    src: "filter_ngrep.rb"
     dest:  /etc/td-agent/plugin/filter_ngrep.rb
     owner: root
     group: root
     mode: 0644
-  notify:
-    - restart fluentd
+  tags: fluentd
 
-# fluent-plugin-google-cloudのインストールにgccが必要
-- name: gcc install
+# defaultで指定されているプラグインを導入するのに必要なパッケージ導入
+- name: packages install
   package:
-    name: gcc
-    state: latest
-
+    name: '{{ item.name }}'
+    state: '{{ item.state | default("present") }}'
+  with_items: '{{ fluentd_requre_packages }}'
+  tags: fluentd
 # よく使うプラグイン導入
-- name: plugin To Use Often
-  command: td-agent-gem install {{ item }}
-  with_items:
-    - fluent-plugin-rewrite-tag-filter
-    - fluent-plugin-elasticsearch
-    - fluent-plugin-cloudwatch-logs
-    - fluent-plugin-slack
-    - fluent-plugin-tail-ex
-    - fluent-plugin-mail
-    - fluent-plugin-google-cloud
+- name: fluentd plugin install
+  shell: "/sbin/td-agent-gem install {{ item.name }}"
+  with_items: '{{ fluentd_plugin }}'
 
 - name: custom td-agent.service set
   template:
@@ -41,12 +34,14 @@
     owner: root
     group: root
     mode: 0644
+  tags: fluentd
 
 # systemdにconfigsを読み直すように強制する
 - name: just force systemd to reread configs
   systemd:
     daemon_reload: yes
   ignore_errors: true
+  tags: fluentd
 
 - name: "create directory /etc/td-agent/certs"
   file:
@@ -55,6 +50,7 @@
     owner: td-agent
     group: td-agent
     mode: 0700
+  tags: fluentd
 
 - name: fluentd.crt set
   template:
@@ -63,3 +59,4 @@
     owner: td-agent
     group: td-agent
     mode: 0644
+  tags: fluentd
