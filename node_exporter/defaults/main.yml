@@ -1,0 +1,7 @@
+---
+# 最新バージョンの確認はhttps://github.com/prometheus/node_exporter/releases
+node_exporter_version: 0.18.1
+node_exporter_src_dir: /usr/local/src
+node_exporter_dir: /usr/local/node_exporter
+node_exporter_config_dir: /etc/node_exporter
+node_exporter_config_file: "{{ node_exporter_config_dir }}/default"
