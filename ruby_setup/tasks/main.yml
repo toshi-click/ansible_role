@@ -1,0 +1,71 @@
+# CentOS向け設定
+- block:
+    - yum:
+        name: "{{ packages }}"
+        state: present
+      vars:
+        packages:
+          - readline-devel
+          - openssl-devel
+          - zlib-devel
+          - gcc
+    # sudo の設定
+    - name: "/etc/sudoers.d/ruby"
+      template:
+        src: "sudo_ruby.j2"
+        dest: "/etc/sudoers.d/ruby"
+        owner: root
+        group: root
+        mode: 0644
+  # CentOS向けここまで
+  when: "ansible_os_family == 'RedHat'"
+
+# Debian・Ubuntu向け設定
+- block:
+    - apt:
+        pkg: "{{ packages }}"
+        state: present
+        update_cache: yes
+      vars:
+        packages:
+          - libreadline-dev
+          - libssl-dev
+          - make
+          - gcc
+          - zlib1g-dev
+
+  # Debian・Ubuntu向け設定ここまで
+  when: "ansible_os_family == 'Debian'"
+
+- name: 'Install rbenv'
+  git:
+    repo: https://github.com/sstephenson/rbenv.git
+    dest: /usr/local/opt/rbenv
+
+- name: 'Install ruby-build'
+  git:
+    repo: https://github.com/sstephenson/ruby-build.git
+    dest: /usr/local/opt/rbenv/plugins/ruby-build
+
+- name: 'Install rbenv-gemset'
+  git:
+    repo: https://github.com/jamis/rbenv-gemset.git
+    dest: /usr/local/opt/rbenv/plugins/rbenv-gemset
+
+- name: rbenv.sh set
+  template:
+    src: "rbenv.sh"
+    dest:  /etc/profile.d/rbenv.sh
+    owner: root
+    group: root
+    mode: 0644
+
+- name: 'ruby Install'
+  shell: bash -lc "rbenv install --skip-existing {{ ruby_version }}"
+
+- name: 'global set'
+  shell: bash -lc "rbenv global {{ ruby_version }}"
+
+# gemインストール
+- name: 'gem install for bundler And rake'
+  shell: bash -lc "gem install bundler rake"

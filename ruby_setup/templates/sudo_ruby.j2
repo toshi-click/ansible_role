@@ -1,0 +1,7 @@
+Cmnd_Alias RBENV = /usr/local/opt/rbenv/bin/, /usr/local/opt/rbenv/shims/
+Cmnd_Alias PYENV = /usr/local/opt/pyenv/bin/, /usr/local/opt/pyenv/shims/
+Cmnd_Alias XXENV = RBENV, PYENV
+toshi ALL=(ALL) ALL,!SHUTDOWN
+toshi ALL = NOPASSWD: XXENV
+Defaults !secure_path
+Defaults env_keep += "PATH RBENV_ROOT http_proxy https_proxy HTTP_PROXY HTTPS_PROXY"
