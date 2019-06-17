@@ -15,3 +15,9 @@
     name: bind-utils
     state: present
   tags: dev_tool_install
+
+- name: nmap install
+  package:
+    name: nmap
+    state: present
+  tags: dev_tool_install

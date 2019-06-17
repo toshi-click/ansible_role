@@ -16,3 +16,10 @@
     name: iputils-ping
     state: present
   tags: dev_tool_install
+
+- name: nmap install
+  package:
+    name: nmap
+    state: present
+  tags: dev_tool_install
+  when: ansible_distribution == 'Ubuntu'
