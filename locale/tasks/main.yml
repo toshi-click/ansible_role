@@ -26,11 +26,13 @@
     package:
       name: manpages-ja-dev
       state: latest
+    when: ansible_distribution == 'Ubuntu'
 
   - name: manpages-ja install
     package:
       name: manpages-ja
       state: latest
+    when: ansible_distribution == 'Ubuntu'
 
   # Ubuntu Japanese Teamリポジトリを追加する
   - name: set ubuntu-ja-archive gpg key
