@@ -17,6 +17,7 @@
     package:
       name: ibus-mozc
       state: latest
+    when: ansible_distribution == 'Ubuntu'
 
   - name: "set-locale"
     shell: update-locale LANG=ja_JP.UTF-8
