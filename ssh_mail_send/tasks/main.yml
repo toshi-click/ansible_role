@@ -5,6 +5,15 @@
 #      with_items:
 #        - perl-Email-MIME
 #        - perl-JSON
+
+# スクリプト設置場所を作成
+- name: "create file {{ ssh_mail_send_trust_list_file }}"
+  template:
+    src: "ip_trust_list.j2"
+    dest: "{{ ssh_mail_send_trust_list_file }}"
+    owner: root
+    group: root
+    mode: 0644
 # ssh ログインでメール送る設定
 - name: sshrc
   template:
