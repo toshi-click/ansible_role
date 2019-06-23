@@ -1,0 +1,6 @@
+---
+- name: install ansible
+  apt:
+    pkg: ansible
+    state: present
+    update_cache: yes
