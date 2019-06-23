@@ -1,0 +1,9 @@
+---
+hosts_accept_protocol_address:
+  # local
+  - {protocol: sshd, ip: 127.0.0.1}
+  - {protocol: snmpd, ip: 127.0.0.1}
+  # local
+  - {protocol: sshd, ip: 192.168.0.0/16}
+  - {protocol: sshd, ip: 172.16.0.0/12}
+sudo_nopassword: "false"

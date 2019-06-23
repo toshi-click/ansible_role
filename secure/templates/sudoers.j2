@@ -99,7 +99,7 @@ root    ALL=(ALL)       ALL
 %wheel  ALL=(ALL)       ALL
 
 ## Same thing without a password
-{% if security.sudo.nopassword == "true" %}
+{% if sudo_nopassword == "true" %}
 %wheel        ALL=(ALL)       NOPASSWD: ALL
 {% else %}
 # %wheel        ALL=(ALL)       NOPASSWD: ALL
@@ -113,4 +113,4 @@ root    ALL=(ALL)       ALL
 # %users  localhost=/sbin/shutdown -h now
 
 ## Read drop-in files from /etc/sudoers.d (the # here does not mean a comment)
-#includedir /etc/sudoers.d
+includedir /etc/sudoers.d

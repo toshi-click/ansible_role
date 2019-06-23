@@ -8,6 +8,6 @@
 #               for information on rule syntax.
 #               See 'man tcpd' for information on tcp_wrappers
 #
-{% for rule in hosts.accept_protocol_address %}
+{% for rule in hosts_accept_protocol_address %}
 {{ rule.protocol }}: {{ rule.ip }}
 {% endfor %}

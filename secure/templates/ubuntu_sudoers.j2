@@ -23,11 +23,11 @@ root    ALL=(ALL:ALL) ALL
 %admin ALL=(ALL) ALL
 
 # Allow members of group sudo to execute any command
-{% if security.sudo.nopassword == "true" %}
+{% if sudo_nopassword == "true" %}
 %sudo   ALL=(ALL) NOPASSWD: ALL
 {% else %}
 %sudo   ALL=(ALL:ALL) ALL
 {% endif %}
 # See sudoers(5) for more information on "#include" directives:
 
-#includedir /etc/sudoers.d
+includedir /etc/sudoers.d
