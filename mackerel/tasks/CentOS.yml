@@ -18,7 +18,7 @@
     state: present
 
 - name: mackerel-agent init
-  command: mackerel-agent init -apikey=""
+  command: mackerel-agent init -apikey="{{ mackerel_Api_Key }}"
 
 - name: Start mackerel-agent
   service:
