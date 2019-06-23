@@ -7,7 +7,7 @@
 # https://raw.githubusercontent.com/ansible/ansible/devel/examples/ansible.cfg
 ## hostキーのチェックしないように修正
 - name: /etc/ansible/ansible.cfg
-  template:
+  copy:
     src: "ansible.cfg"
     dest: "/etc/ansible/ansible.cfg"
     owner: root
