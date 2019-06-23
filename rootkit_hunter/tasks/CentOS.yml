@@ -1,0 +1,22 @@
+---
+- name: rkhunter install
+  package:
+    name: rkhunter
+    state: present
+
+- name: RedHat rkhunter conf set
+  template:
+    src: "rkhunter.conf.j2"
+    dest: "/etc/rkhunter.conf"
+    owner: root
+    group: root
+    mode: 0640
+
+- name: RedHat rkhunter cron daily
+  template:
+    src: "rkhunter.j2"
+    dest: "/etc/cron.daily/rkhunter"
+    owner: root
+    group: root
+    mode: 0755
+    

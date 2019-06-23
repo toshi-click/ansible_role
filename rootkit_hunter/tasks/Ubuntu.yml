@@ -1,0 +1,30 @@
+---
+- name: install rkhunter
+  apt:
+    pkg: rkhunter
+    state: present
+    update_cache: yes
+
+- name: Debian rkhunter conf set
+  template:
+    src: "ubuntu_rkhunter.conf"
+    dest: "/etc/rkhunter.conf"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Debian rkhunter default conf set
+  template:
+    src: "default/rkhunter"
+    dest: "/etc/default/rkhunter"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Debian rkhunter cron daily
+  template:
+    src: "rkhunter"
+    dest: "/etc/cron.daily/rkhunter"
+    owner: root
+    group: root
+    mode: 0755

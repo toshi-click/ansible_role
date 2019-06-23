@@ -1,7 +1,10 @@
-- name: rkhunter install
-  package:
-    name: rkhunter
-    state: latest
+- include: CentOS.yml
+  when: ansible_distribution == "CentOS"
+  tags: docker
+
+- include: Ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+  tags: docker
 
 - name: "/var/log/rkhunter directory create"
   file:
@@ -10,52 +13,6 @@
     owner: root
     group: root
     mode: 0755
-
-# rootkit hunter 導入 -----------------------------------------------------------------------------------------
-- name: RedHat rkhunter conf set
-  template:
-    src: "rkhunter.conf.j2"
-    dest: "/etc/rkhunter.conf"
-    owner: root
-    group: root
-    mode: 0640
-  when: "ansible_os_family == 'RedHat'"
-
-- name: RedHat rkhunter cron daily
-  template:
-    src: "rkhunter.j2"
-    dest: "/etc/cron.daily/rkhunter"
-    owner: root
-    group: root
-    mode: 0755
-  when: "ansible_os_family == 'RedHat'"
-
-- name: Debian rkhunter conf set
-  template:
-    src: "ubuntu_rkhunter.conf"
-    dest: "/etc/rkhunter.conf"
-    owner: root
-    group: root
-    mode: 0644
-  when: "ansible_os_family == 'Debian'"
-
-- name: Debian rkhunter default conf set
-  template:
-    src: "default/rkhunter"
-    dest: "/etc/default/rkhunter"
-    owner: root
-    group: root
-    mode: 0644
-  when: "ansible_os_family == 'Debian'"
-
-- name: Debian rkhunter cron daily
-  template:
-    src: "rkhunter"
-    dest: "/etc/cron.daily/rkhunter"
-    owner: root
-    group: root
-    mode: 0755
-  when: "ansible_os_family == 'Debian'"
 
 - name: "rkhunter --update"
   ignore_errors: true
