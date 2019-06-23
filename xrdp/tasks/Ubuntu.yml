@@ -1,0 +1,13 @@
+---
+- name: xrdp install
+  package:
+    name: xrdp
+    state: latest
+  notify:
+    - enable xrdp
+    - restart xrdp
+
+- name: ubuntu-desktop install
+  package:
+    name: ubuntu-desktop
+    state: latest

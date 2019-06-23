@@ -1,0 +1,47 @@
+---
+- name: xrdp install
+  package:
+    name: xrdp
+    state: latest
+  notify:
+    - enable xrdp
+    - restart xrdp
+
+- name: install the 'GNOME Desktop' package group
+  command: 'yum -y groupinstall "GNOME Desktop"'
+# 日本語キーボード用の設定ファイル追加
+- name: "set /etc/xrdp/km-0411.ini"
+  template:
+    src: "key.ini.j2"
+    dest: "/etc/xrdp/km-0411.ini"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "set /etc/xrdp/km-e0010411.ini"
+  template:
+    src: "key.ini.j2"
+    dest: "/etc/xrdp/km-e0010411.ini"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "set /etc/xrdp/km-e0200411.ini"
+  template:
+    src: "key.ini.j2"
+    dest: "/etc/xrdp/km-e0200411.ini"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "set /etc/xrdp/km-e0210411.ini"
+  template:
+    src: "key.ini.j2"
+    dest: "/etc/xrdp/km-e0210411.ini"
+    owner: root
+    group: root
+    mode: 0644
+
+# GUI起動に切り替える
+- name: "Switch to GUI startup"
+  command: systemctl set-default graphical.target
