@@ -24,12 +24,13 @@
     url: "https://download.docker.com/linux/ubuntu/gpg"
     state: present
   register: set_key
+  when: ansible_distribution == "Ubuntu"
 
 - name: set up the stable repository
   apt_repository:
     repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
     state: present
-  when: set_key
+  when: set_key && ansible_distribution == "Ubuntu"
   register: set_repo
 
 - name: install docker-ce
