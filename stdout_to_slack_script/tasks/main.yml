@@ -4,6 +4,15 @@
 - include: Ubuntu.yml
   when: "ansible_os_family == 'Debian'"
 
+# スクリプト設置場所を作成
+- name: "create directory{{ script_dir }}"
+  file:
+    path: "{{ script_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+
 # 標準出力をSlackに通知するシェルを配置する
 - name: "{{ script_dir }}/stdout_to_slack.sh set"
   template:

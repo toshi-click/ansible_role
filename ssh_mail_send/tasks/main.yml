@@ -1,11 +1,3 @@
-# スクリプト設置場所を作成
-- name: "create directory{{ script_dir }}"
-  file:
-    path: "{{ script_dir }}"
-    state: directory
-    owner: root
-    group: root
-    mode: 0777
 #    - name: to mail required packages install
 #      package:
 #        name: "{{ item }}"
