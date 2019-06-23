@@ -1,25 +1,29 @@
 ---
 - name: mailutils install
-  package:
-    name: mailutils
+  apt:
+    pkg: mailutils
     state: present
+    update_cache: yes
   tags: dev_tool_install
 
 - name: iproute2 install
-  package:
-    name: iproute2
+  apt:
+    pkg: iproute2
     state: present
+    update_cache: yes
   tags: dev_tool_install
 
 - name: iputils-ping install
-  package:
-    name: iputils-ping
+  apt:
+    pkg: iputils-ping
     state: present
+    update_cache: yes
   tags: dev_tool_install
 
 - name: nmap install
-  package:
-    name: nmap
+  apt:
+    pkg: nmap
     state: present
+    update_cache: yes
   tags: dev_tool_install
-  when: ansible_distribution == 'Ubuntu'
+#  when: ansible_distribution == 'Ubuntu'
