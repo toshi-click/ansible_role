@@ -3,12 +3,10 @@
   when: "ansible_kernel | version_compare('3.10', '<')"
 
 - include: CentOS.yml
-  when: ansible_distribution == "CentOS"
-  tags: docker
+  when: "ansible_os_family == 'RedHat'"
 
 - include: Ubuntu.yml
-  when: ansible_distribution == "Ubuntu"
-  tags: docker
+  when: "ansible_os_family == 'Debian'"
 
 # systemdにconfigsを読み直すように強制する
 # servicedの再読込（/etc/systemd/system/のファイルを変更した場合に必須）

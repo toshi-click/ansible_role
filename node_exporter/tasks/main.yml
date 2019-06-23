@@ -1,7 +1,5 @@
 - include: CentOS.yml
-  when: ansible_distribution == "CentOS"
-  tags: fluentd
+  when: "ansible_os_family == 'RedHat'"
 
 - include: Ubuntu.yml
-  when: ansible_distribution == "Ubuntu"
-  tags: fluentd
+  when: "ansible_os_family == 'Debian'"
