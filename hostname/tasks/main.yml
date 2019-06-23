@@ -1,4 +1,4 @@
 # ホスト名 -----------------------------------------------------------------------------------------
-- name: "change hostname to {{ host.name }}"
+- name: "change hostname to {{ machine_hostname }}"
   hostname:
-    name: "{{ host.name }}"
+    name: "{{ machine_hostname }}"
