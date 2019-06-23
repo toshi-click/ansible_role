@@ -2,4 +2,4 @@
   when: "ansible_os_family == 'RedHat'"
 
 - include: Ubuntu.yml
-  when: "ansible_os_family == 'Debian'"
+  when: ansible_distribution == "Ubuntu"
