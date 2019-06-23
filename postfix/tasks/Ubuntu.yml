@@ -1,0 +1,6 @@
+---
+- name: Install postfix packages
+  apt:
+    pkg: postfix
+    state: present
+    update_cache: yes

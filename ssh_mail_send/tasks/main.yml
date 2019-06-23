@@ -1,27 +1,23 @@
-# root宛メールをslackに通知するシェル配置
-- block:
-  # スクリプト設置場所を作成
-  - name: "create directory{{ script_dir }}"
-    file:
-      path: "{{ script_dir }}"
-      state: directory
-      owner: root
-      group: root
-      mode: 0777
-
-  - name: mail2slack sh set
-    template:
-      src: "mail2slack.j2"
-      dest: "{{ script_dir }}/bin/mail2slack"
-      owner: root
-      group: root
-      mode: 0755
-  # ssh ログインでメール送る設定
-  - name: sshrc
-    template:
-      src: "sshrc.j2"
-      dest: "/etc/ssh/sshrc"
-      owner: root
-      group: root
-      mode: 0755
-  when: send_slack == 'true'
+# スクリプト設置場所を作成
+- name: "create directory{{ script_dir }}"
+  file:
+    path: "{{ script_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0777
+#    - name: to mail required packages install
+#      package:
+#        name: "{{ item }}"
+#        state: latest
+#      with_items:
+#        - perl-Email-MIME
+#        - perl-JSON
+# ssh ログインでメール送る設定
+- name: sshrc
+  template:
+    src: "sshrc.j2"
+    dest: "/etc/ssh/sshrc"
+    owner: root
+    group: root
+    mode: 0755

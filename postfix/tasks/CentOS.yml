@@ -1,0 +1,6 @@
+---
+# tasks file for ufw (CentOS specific)
+- name: postfix install
+  package:
+    name: postfix
+    state: latest
