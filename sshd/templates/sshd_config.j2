@@ -46,7 +46,7 @@ SyslogFacility AUTHPRIV
 # Authentication:
 
 #LoginGraceTime 2m
-PermitRootLogin {{ sshd_setting.PermitRootLogin }}
+PermitRootLogin {{ sshd_permit_root_login }}
 #StrictModes yes
 #MaxAuthTries 6
 #MaxSessions 10
@@ -76,7 +76,7 @@ AuthorizedKeysFile      .ssh/authorized_keys
 # To disable tunneled clear text passwords, change to no here!
 #PasswordAuthentication yes
 #PermitEmptyPasswords no
-PasswordAuthentication {{ sshd_setting.passwordLogin }}
+PasswordAuthentication {{ sshd_password_login }}
 
 # Change to no to disable s/key passwords
 #ChallengeResponseAuthentication yes
@@ -152,6 +152,6 @@ Subsystem       sftp    /usr/libexec/openssh/sftp-server
 #       AllowTcpForwarding no
 #       PermitTTY no
 #       ForceCommand cvs server
-{% if sshd_setting.permitUser != '' %}
-    AllowUsers {{ sshd_setting.permitUser }}
+{% if sshd_permit_user != '' %}
+    AllowUsers {{ sshd_permit_user }}
 {% endif %}

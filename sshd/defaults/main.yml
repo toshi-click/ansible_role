@@ -1,0 +1,7 @@
+---
+# sshdの設定
+sshd_password_login: "no"
+# この設定はCentOSのみ有効
+sshd_permit_root_login: "no"
+# permitUserが空の場合はユーザ制限行いません
+sshd_permit_user: ""

@@ -53,7 +53,7 @@
 #IgnoreRhosts yes
 
 # To disable tunneled clear text passwords, change to no here!
-PasswordAuthentication {{ sshd_setting.passwordLogin }}
+PasswordAuthentication {{ sshd_password_login }}
 #PermitEmptyPasswords no
 
 # Change to yes to enable challenge-response passwords (beware issues with
@@ -121,6 +121,6 @@ Subsystem       sftp    /usr/lib/openssh/sftp-server
 #       PermitTTY no
 #       ForceCommand cvs server
 
-{% if sshd_setting.permitUser != '' %}
-    AllowUsers {{ sshd_setting.permitUser }}
+{% if sshd_permit_user != '' %}
+    AllowUsers {{ sshd_permit_user }}
 {% endif %}
