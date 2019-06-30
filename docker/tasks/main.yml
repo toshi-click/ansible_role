@@ -1,31 +1,5 @@
-- name: Check kernel version.
-  fail: msg="Kernel {{ ansible_kernel }} is not supported."
-  when: "ansible_kernel | version_compare('3.10', '<')"
-
 - include: CentOS.yml
   when: "ansible_os_family == 'RedHat'"
 
 - include: Ubuntu.yml
   when: ansible_distribution == "Ubuntu"
-
-# systemdにconfigsを読み直すように強制する
-# servicedの再読込（/etc/systemd/system/のファイルを変更した場合に必須）
-- name: just force systemd to reread configs
-  systemd:
-    daemon_reload: yes
-  ignore_errors: true
-
-# OSで分岐の必要のない処理
-- name: enable docker
-  service:
-    name: docker
-    enabled: yes
-
-# docker ipv4 forward-----------------------------------------------------------------------------------------
-- name: "setting ipv4 forward for docker"
-  template:
-    src: "10-ipv4.conf.j2"
-    dest: "/etc/sysctl.d/10-ipv4.conf"
-    owner: root
-    group: root
-    mode: 0644
