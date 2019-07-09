@@ -24,18 +24,17 @@
     url: "https://download.docker.com/linux/ubuntu/gpg"
     state: present
   register: set_key
-  when: ansible_distribution == "Ubuntu"
 
 - name: set up the stable repository
   apt_repository:
     repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
     state: present
-  when: set_key && ansible_distribution == "Ubuntu"
-  register: set_repo
 
 - name: install docker-ce
-  apt: pkg=docker-ce state=present update_cache=yes
-  when: set_repo
+  apt:
+    pkg: docker-ce
+    state: present
+    update_cache: yes
 
 - name: "docker-compose Download"
   get_url:
@@ -59,6 +58,19 @@
     owner: root
     group: root
     mode: 0644
-  notify:
-    - enable docker
-    - restart docker
+
+# systemdにconfigsを読み直すように強制する
+# servicedの再読込（/etc/systemd/system/のファイルを変更した場合に必須）
+- name: just force systemd to reread configs
+  systemd:
+    daemon_reload: yes
+  ignore_errors: true
+
+# docker ipv4 forward-----------------------------------------------------------------------------------------
+- name: "setting ipv4 forward for docker"
+  template:
+    src: "10-ipv4.conf.j2"
+    dest: "/etc/sysctl.d/10-ipv4.conf"
+    owner: root
+    group: root
+    mode: 0644
