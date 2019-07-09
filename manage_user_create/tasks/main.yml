@@ -1,13 +1,11 @@
 - name: "create group {{ manage_user.group }}"
   group:
     name: "{{ manage_user.group }}"
-    gid: "{{ manage_user.gid }}"
 
 - name: "users exist {{ manage_user.name }}  {{ manage_user.group }}"
   user:
     name: "{{ manage_user.name }}"
     state: present
-    uid: "{{ manage_user.uid }}"
     password: "{{ manage_user.password }}"
     group: "{{ manage_user.group }}"
     shell: /bin/bash
