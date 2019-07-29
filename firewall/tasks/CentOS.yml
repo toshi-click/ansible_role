@@ -15,8 +15,6 @@
     owner: root
     group: root
     mode: 0600
-  notify:
-    - restart iptables
 
 # ip6tables
 - name: ip6tables is configured
@@ -26,5 +24,3 @@
     owner: root
     group: root
     mode: 0600
-  notify:
-    - restart ip6tables

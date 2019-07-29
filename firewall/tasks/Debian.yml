@@ -1,0 +1,35 @@
+---
+- name: install iptables
+  apt:
+    pkg: iptables
+    state: present
+    update_cache: yes
+
+- name: install iptables-persistent
+  apt:
+    pkg: iptables-persistent
+    state: present
+    update_cache: yes
+
+- name: iptables is configured
+  template:
+    src: "iptables.j2"
+    dest: "/etc/iptables/rules.v4"
+    owner: root
+    group: root
+    mode: 0644
+
+# ip6tables
+- name: ip6tables is configured
+  template:
+    src: "ip6tables.j2"
+    dest: "/etc/iptables/rules.v6"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: restart netfilter-persistent is firewall
+  service:
+    name: netfilter-persistent
+    state: restarted
+    enabled: yes
