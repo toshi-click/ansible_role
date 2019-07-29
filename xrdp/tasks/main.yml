@@ -5,3 +5,7 @@
 - include: Ubuntu.yml
   when: ansible_distribution == "Ubuntu"
   tags: xrdp
+
+- include: Debian.yml
+  when: ansible_distribution == "Debian"
+  tags: xrdp

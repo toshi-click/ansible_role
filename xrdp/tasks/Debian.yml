@@ -1,0 +1,15 @@
+---
+- name: install tightvncserver
+  apt:
+    pkg: tightvncserver
+    state: present
+    update_cache: yes
+
+- name: install xrdp
+  apt:
+    pkg: xrdp
+    state: present
+    update_cache: yes
+  notify:
+    - enable xrdp
+    - restart xrdp
