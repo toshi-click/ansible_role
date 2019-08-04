@@ -4,6 +4,7 @@
     pkg: mailutils
     state: present
     update_cache: yes
+    cache_valid_time: 3600
   tags: dev_tool_install
 
 - name: iproute2 install
@@ -11,6 +12,7 @@
     pkg: iproute2
     state: present
     update_cache: yes
+    cache_valid_time: 3600
   tags: dev_tool_install
 
 - name: iputils-ping install
@@ -18,6 +20,7 @@
     pkg: iputils-ping
     state: present
     update_cache: yes
+    cache_valid_time: 3600
   tags: dev_tool_install
 
 - name: nmap install
@@ -25,5 +28,6 @@
     pkg: nmap
     state: present
     update_cache: yes
+    cache_valid_time: 3600
   tags: dev_tool_install
 #  when: ansible_distribution == 'Ubuntu'

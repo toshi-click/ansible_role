@@ -4,17 +4,21 @@
     pkg: debconf-utils
     state: present
     update_cache: yes
+    cache_valid_time: 3600
 
 - name: unattended-upgrades install
   apt:
     pkg: unattended-upgrades
     state: present
     update_cache: yes
+    cache_valid_time: 3600
+
 - name: apt-listchanges install
   apt:
     pkg: apt-listchanges
     state: present
     update_cache: yes
+    cache_valid_time: 3600
 
 #  $ echo 'unattended-upgrades unattended-upgrades/enable_auto_updates boolean true' \
 #  | sudo debconf-set-selections

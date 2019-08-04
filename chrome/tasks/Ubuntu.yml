@@ -16,9 +16,11 @@
 - name: Update apt cache
   apt:
     update_cache: yes
+    cache_valid_time: 3600
 
 - name: Install Google Chrome
   apt:
     update_cache: yes
+    cache_valid_time: 3600
     pkg: google-chrome-stable
     state: present
