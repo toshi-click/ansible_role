@@ -7,7 +7,30 @@
     - enable xrdp
     - restart xrdp
 
+- name: install tightvncserver
+  apt:
+    pkg: tightvncserver
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
 - name: ubuntu-desktop install
   package:
     name: ubuntu-desktop
     state: latest
+
+- name: install tasksel
+  apt:
+    pkg: tasksel
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+# ログイン後にエラー出るので対応
+- name:
+  lineinfile:
+    path: /etc/xrdp/xrdp.ini
+    regexp: '^new_cursors=true'
+    line: 'new_cursors=false'
+
+
