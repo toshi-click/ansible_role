@@ -17,6 +17,7 @@
 
 - name: newaliases
   command: newaliases
+  check_mode: no
 
 # root宛メールをslackに通知するシェル配置
 - name: "/export作成"

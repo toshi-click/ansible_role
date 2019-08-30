@@ -4,3 +4,4 @@
 #     web_container_name: "tenpo_apache"
 - name: "{{ directory.www_dir }}/{{ service.name }} composer install update"
   command: docker exec -i {{ service.docker.web_container_name }} bash -c 'cd {{ directory.www_dir }}/{{ service.name }} && php composer.phar install'
+  check_mode: no

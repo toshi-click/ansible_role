@@ -19,6 +19,7 @@
 
 - name: mackerel-agent init
   command: mackerel-agent init -apikey="{{ mackerel_Api_Key }}"
+  check_mode: no
 
 - name: Start mackerel-agent
   service:

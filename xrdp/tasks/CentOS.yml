@@ -17,6 +17,7 @@
     owner: root
     group: root
     mode: 0644
+  check_mode: no
 
 - name: "set /etc/xrdp/km-e0010411.ini"
   template:
@@ -45,3 +46,4 @@
 # GUI起動に切り替える
 - name: "Switch to GUI startup"
   command: systemctl set-default graphical.target
+  check_mode: no
