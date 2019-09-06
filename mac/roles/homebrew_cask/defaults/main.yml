@@ -34,5 +34,3 @@ homebrew_cask_packages:
   - name: android-studio
   - name: genymotion
   - name: java8
-  # reactnative
-  - name: watchman
