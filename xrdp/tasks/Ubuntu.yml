@@ -2,10 +2,24 @@
 - name: xrdp install
   package:
     name: xrdp
-    state: latest
+    state: present
   notify:
     - enable xrdp
     - restart xrdp
+
+- name: install xserver-xorg-core
+  apt:
+    pkg: xserver-xorg-core
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: install xorgxrdp
+  apt:
+    pkg: xorgxrdp
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
 
 - name: install tightvncserver
   apt:
@@ -17,7 +31,7 @@
 - name: ubuntu-desktop install
   package:
     name: ubuntu-desktop
-    state: latest
+    state: present
 
 - name: install tasksel
   apt:
