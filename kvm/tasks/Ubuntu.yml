@@ -1,0 +1,18 @@
+---
+- name: Install multi packages
+  apt:
+    name:
+      - qemu-kvm
+      - libvirt-bin
+      - virtinst
+      - bridge-utils
+      - libosinfo-bin
+      - libguestfs-tools
+      - virt-top
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- command: modprobe vhost_net
+- command: echo vhost_net >> /etc/modules
+  netplan apply

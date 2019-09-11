@@ -1,0 +1,19 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp3s0:
+      dhcp4: no
+      dhcp6: no
+  # ブリッジインターフェース設定
+  bridges:
+    br0:
+      interfaces: [enp3s0]
+      dhcp4: no
+      addresses: [172.16.177.200/16]
+      gateway4: 172.16.0.1
+      nameservers:
+        addresses: [8.8.8.8,8.4.4.8,1.1.1.1,127.0.0.1]
+      parameters:
+        stp: false
+      dhcp6: no

@@ -1,25 +1,5 @@
-- name: libvirt install
-  package:
-    name: libvirt
-    state: present
-  notify:
-    - enable libvirt
-    - restart libvirt
+- include: CentOS.yml
+  when: ansible_distribution == "CentOS"
 
-# GUI操作用にvirt-managerを入れる
-- name: virt-manager install
-  package:
-    name: virt-manager
-    state: present
-
-# CUI操作用にvirt-installを入れる
-- name: virt-install install
-  package:
-    name: virt-install
-    state: present
-
-# ブリッジを有効にするためにbridge-utilsをインストール
-- name: bridge-utils install
-  package:
-    name: bridge-utils
-    state: present
+- include: Ubuntu.yml
+  when: ansible_distribution == "Ubuntu"

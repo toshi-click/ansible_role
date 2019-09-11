@@ -46,3 +46,6 @@
     path: /etc/xrdp/xrdp.ini
     regexp: '^new_cursors=true'
     line: 'new_cursors=false'
+
+  chmod 711 /etc/ssl/private/
+  chmod 644 /etc/ssl/private/ssl-cert-snakeoil.key
