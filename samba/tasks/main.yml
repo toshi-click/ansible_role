@@ -1,12 +1,93 @@
-- name: samba install
-  package:
-    name: samba
-    state: latest
-  notify:
-    - enable samba
-    - enable nmb
+---
+- name: Include OS specific variables
+  include_vars: "{{ item }}"
+  with_first_found:
+    - "os_{{ ansible_distribution }}.yml"
+    - "os_{{ ansible_os_family }}.yml"
+  tags: samba
 
-- name: samba-client install
+- name: Install Samba packages
   package:
-    name: samba-client
-    state: latest
+    name: "{{ samba_packages }}"
+    state: present
+  tags: samba
+
+- name: Install Samba VFS extensions packages
+  package:
+    name: "{{ samba_vfs_packages }}"
+    state: present
+  when: samba_vfs_packages is defined
+  tags: samba
+
+- name: Create Samba shares root directory
+  file:
+    state: directory
+    path: "{{ samba_shares_root }}"
+    owner: root
+    group: root
+    mode: '0755'
+  when: samba_shares|length > 0
+  tags: samba
+
+- name: Create share directories
+  with_items: "{{ samba_shares }}"
+  file:
+    state: directory
+    path: "{{ item.path|default([samba_shares_root,item.name]|join('/')) }}"
+    owner: "{{ item.owner|default('root') }}"
+    group: "{{ item.group|default('users') }}"
+    mode: "{{ item.directory_mode|default('0775') }}"
+    setype: "{{ item.setype|default('samba_share_t') }}"
+  tags: samba
+
+- name: Samba configuration
+  template:
+    dest: "{{ samba_configuration }}"
+    src: smb.conf.j2
+    validate: 'testparm -s %s'
+  notify:
+    - Restart Samba services
+    - Enable Samba services
+  tags: samba
+
+- name: Install share specific include files
+  template:
+    src: "{{ item.include_file }}"
+    dest: "{{ samba_configuration_dir }}"
+    validate: 'testparm -s %s'
+  when: item.include_file is defined
+  notify:
+    - Restart Samba services
+  with_items: "{{ samba_shares }}"
+  tags: samba
+
+- name: Create username map file if needed
+  template:
+    dest: "{{ samba_username_map_file }}"
+    src: smbusers.j2
+  notify:
+    - Restart Samba services
+  when: samba_username_map is defined
+  tags: samba
+
+- name: Start Samba service(s)
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  with_items: "{{ samba_services }}"
+  tags: samba
+
+- name: Create Samba users if they don't exist yet
+  shell: >
+    set -o nounset -o pipefail -o errexit &&
+    (pdbedit --user={{ item.name }} 2>&1 > /dev/null) \
+    || (echo {{ item.password }}; echo {{ item.password }}) \
+    | smbpasswd -s -a {{ item.name }}
+  args:
+    executable: /bin/bash
+  with_items: "{{ samba_users }}"
+  no_log: true
+  register: create_user_output
+  changed_when: "'Added user' in create_user_output.stdout"
+  tags: samba
