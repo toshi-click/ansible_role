@@ -1,8 +1,9 @@
 ---
 samba_workgroup: 'WORKGROUP'
 samba_server_string: 'Fileserver %m'
-samba_log_size: 5000
-samba_log_level: 0
+samba_log: "/var/log/samba/smbd.log"
+samba_log_size: 102400
+samba_log_level: 1
 samba_interfaces: []
 samba_security: 'user'
 samba_passdb_backend: 'tdbsam'
@@ -11,11 +12,10 @@ samba_load_printers: false
 samba_printer_type: 'cups'
 samba_cups_server: 'localhost:631'
 samba_load_homes: false
-samba_create_varwww_symlinks: false
 samba_shares_root: '/share'
 samba_shares: []
 samba_users: []
-
+samba_allow_ip: "127. 172.16. 192.168."
 samba_wins_support: 'yes'
 samba_local_master: 'yes'
 samba_domain_master: 'yes'

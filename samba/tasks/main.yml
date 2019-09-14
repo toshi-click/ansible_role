@@ -1,4 +1,5 @@
 ---
+# 参考：https://github.com/bertvv/ansible-role-samba
 - name: Include OS specific variables
   include_vars: "{{ item }}"
   with_first_found:
@@ -35,7 +36,7 @@
     state: directory
     path: "{{ item.path|default([samba_shares_root,item.name]|join('/')) }}"
     owner: "{{ item.owner|default('root') }}"
-    group: "{{ item.group|default('users') }}"
+    group: "{{ item.group|default('root') }}"
     mode: "{{ item.directory_mode|default('0775') }}"
     setype: "{{ item.setype|default('samba_share_t') }}"
   tags: samba

@@ -17,6 +17,18 @@
   fruit:aapl = yes
 {% endif %}
 
+  # 文字コード
+  unix charset = UTF-8
+  dos charset = CP932
+  display charset = CP932
+  # MAC PC
+  unix extensions = no
+  wide links = yes
+
+{% if samba_allow_ip is defined %}
+  hosts allow = {{ samba_allow_ip }}
+{% endif %}
+
   # Logging
 {% if samba_log is defined %}
   log file = {{ samba_log }}
