@@ -45,7 +45,6 @@
   template:
     dest: "{{ samba_configuration }}"
     src: smb.conf.j2
-    validate: 'testparm -s %s'
   notify:
     - Restart Samba services
     - Enable Samba services

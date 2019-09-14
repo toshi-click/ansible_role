@@ -41,11 +41,42 @@
     cache_valid_time: 3600
 
 # ログイン後にエラー出るので対応
-- name:
+- name: "カーソルのバックグラウンドに黒い四角い領域が表示されてしまうので、new_cursorsを無効"
   lineinfile:
     path: /etc/xrdp/xrdp.ini
     regexp: '^new_cursors=true'
     line: 'new_cursors=false'
 
-  chmod 711 /etc/ssl/private/
-  chmod 644 /etc/ssl/private/ssl-cert-snakeoil.key
+- name: "xrdpログイン時にsslキーが読み込めずに接続失敗するのでパーミッション設定"
+  file:
+    path: /etc/ssl/private/
+    state: directory
+    mode: 0711
+
+- name: "xrdpログイン時にsslキーが読み込めずに接続失敗するのでパーミッション設定"
+  file:
+    path: /etc/ssl/private/ssl-cert-snakeoil.key
+    mode: 0644
+
+  # Authentication Requiredダイアログの回避
+- name: "root向けUbuntu向けにカスタマイズされた設定をロードする為に~/.xsessionrcにて以下の環境変数を設定"
+  copy:
+    src: xrdp-color-manager.pkla
+    dest: "/etc/polkit-1/localauthority/50-local.d/xrdp-color-manager.pkla"
+
+- name: Restart polkit services
+  service:
+    name: polkit
+    state: restarted
+
+- name: "root向けUbuntu向けにカスタマイズされた設定をロードする為に~/.xsessionrcにて以下の環境変数を設定"
+  copy:
+    src: .xsessionrc
+    dest: "/root/.xsessionrc"
+
+- name: "一般ユーザー向けUbuntu向けにカスタマイズされた設定をロードする為に~/.xsessionrcにて以下の環境変数を設定"
+  copy:
+    src: .xsessionrc
+    dest: "/home/{{ item.name }}/.xsessionrc"
+  when: xrdp_users is defined
+  with_items: "{{ xrdp_users }}"

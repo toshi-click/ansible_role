@@ -3,7 +3,7 @@ SOURCE_IP=${SSH_CLIENT%% *}
 # リストと比較して信頼していないIPからならメール送付
 while read line
 do
-    if [[ $SOURCE_IP =~ $line ]] ; then
+    if $(echo $SOURCE_IP | grep $line > /dev/null) ; then
       exit 0
     fi
 done < {{ ssh_mail_send_trust_list_file }}
