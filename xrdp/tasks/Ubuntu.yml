@@ -1,41 +1,14 @@
 ---
-- name: xrdp install
-  package:
-    name: xrdp
-    state: present
-  notify:
-    - enable xrdp
-    - restart xrdp
-
-- name: install xserver-xorg-core
+- name: install ubuntu-desktop
   apt:
-    pkg: xserver-xorg-core
+    pkg: ubuntu-desktop
     state: present
     update_cache: yes
     cache_valid_time: 3600
 
-- name: install xorgxrdp
+- name: install xrdp
   apt:
-    pkg: xorgxrdp
-    state: present
-    update_cache: yes
-    cache_valid_time: 3600
-
-- name: install tightvncserver
-  apt:
-    pkg: tightvncserver
-    state: present
-    update_cache: yes
-    cache_valid_time: 3600
-
-- name: ubuntu-desktop install
-  package:
-    name: ubuntu-desktop
-    state: present
-
-- name: install tasksel
-  apt:
-    pkg: tasksel
+    pkg: xrdp
     state: present
     update_cache: yes
     cache_valid_time: 3600
@@ -46,6 +19,14 @@
     path: /etc/xrdp/xrdp.ini
     regexp: '^new_cursors=true'
     line: 'new_cursors=false'
+
+#- name: ""
+#  lineinfile:
+#    path: /etc/xrdp/xrdp.ini
+#    regexp: '^new_cursors=true'
+#    line: 'new_cursors=false'
+#  allowed_users=anybody
+#  /etc/X11/Xwrapper.config
 
 - name: "xrdpログイン時にsslキーが読み込めずに接続失敗するのでパーミッション設定"
   file:
