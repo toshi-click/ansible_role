@@ -16,8 +16,8 @@ samba_shares_root: '/share'
 samba_shares: []
 samba_users: []
 samba_allow_ip: "127. 172.16. 192.168."
-samba_wins_support: 'yes'
-samba_local_master: 'yes'
-samba_domain_master: 'yes'
-samba_preferred_master: 'yes'
+samba_wins_support: 'no'
+samba_local_master: 'no'
+samba_domain_master: 'no'
+samba_preferred_master: 'no'
 samba_mitigate_cve_2017_7494: true
