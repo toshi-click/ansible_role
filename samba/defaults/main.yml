@@ -2,12 +2,20 @@
 samba_workgroup: 'WORKGROUP'
 samba_server_string: 'Fileserver %m'
 samba_log: "/var/log/samba/smbd.log"
+# samba_log_size(KB)
 samba_log_size: 102400
 samba_log_level: 1
 samba_interfaces: []
 samba_security: 'user'
 samba_passdb_backend: 'tdbsam'
+
+# samba_map_to_guest
+# Never|Bad User|Bad Password
+# Never：ゲスト認証を許可しない
+# Bad User：指定されたユーザが存在しない場合、ゲストとしてログイン許可
+# Bad Password：Bad Userに加えてパスワード入力ミスの場合もログイン許可
 samba_map_to_guest: 'never'
+
 samba_load_printers: false
 samba_printer_type: 'cups'
 samba_cups_server: 'localhost:631'
@@ -16,8 +24,7 @@ samba_shares_root: '/share'
 samba_shares: []
 samba_users: []
 samba_allow_ip: "127. 172.16. 192.168."
-samba_wins_support: 'no'
-samba_local_master: 'no'
-samba_domain_master: 'no'
-samba_preferred_master: 'no'
 samba_mitigate_cve_2017_7494: true
+
+samba_server_min_protocol: "SMB2"
+samba_server_max_protocol: "SMB3"

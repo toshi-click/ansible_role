@@ -4,18 +4,8 @@
 # {{ ansible_managed }}
 
 [global]
-  # Server information
-  netbios name = {% if samba_netbios_name is defined %}{{ samba_netbios_name }}{% else %}{{ ansible_hostname }}{% endif %}
-
   workgroup = {{ samba_workgroup }}
-{% if samba_realm is defined %}
-  realm = {{ samba_realm }}
-{% endif %}
   server string = {{ samba_server_string }}
-
-{% if samba_apple_extensions is defined %}
-  fruit:aapl = yes
-{% endif %}
 
   # 文字コード
   unix charset = UTF-8
@@ -24,8 +14,9 @@
   unix extensions = no
   wide links = yes
 
-{% if samba_allow_ip is defined %}
-  hosts allow = {{ samba_allow_ip }}
+{% if samba_interfaces|length > 0 %}
+  interfaces = {{ samba_interfaces }}
+  bind interfaces only = yes
 {% endif %}
 
   # Logging
@@ -41,9 +32,7 @@
   security = {{ samba_security }}
   passdb backend = {{ samba_passdb_backend }}
   map to guest = {{ samba_map_to_guest }}
-{% if samba_guest_account  is defined %}
-  guest account = {{ samba_guest_account }}
-{% endif %}
+
 {% if samba_username_map is defined %}
   username map = {{ samba_username_map_file }}
 {% endif %}
@@ -58,15 +47,6 @@
   server max protocol = {{ samba_server_max_protocol }}
 
 {% endif %}
-{% if samba_interfaces|length > 0 %}
-  interfaces = {{ samba_interfaces }}
-
-{% endif %}
-  # Name resolution: make sure \\NETBIOS_NAME\ works
-  wins support = {{ samba_wins_support | ternary('yes', 'no') }}
-  local master = {{ samba_local_master | ternary('yes', 'no') }}
-  domain master = {{ samba_domain_master | ternary('yes', 'no') }}
-  preferred master = {{ samba_preferred_master | ternary('yes', 'no') }}
 
 {% if not samba_load_printers %}
   # Don't load printers
