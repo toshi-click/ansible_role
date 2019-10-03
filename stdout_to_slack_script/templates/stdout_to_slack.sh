@@ -1,6 +1,7 @@
 #!/bin/bash
 
-TEXT=$(cat -)
+#改行コードをslack用に変換
+TEXT=$(cat - | tr '\n' '\\' | sed 's/\\/\\n/g')
 WEBHOOK_URL="{{ slack_web_hook_url }}"
 CHANNEL="{{ slack_channel }}"
 ICON="{{ slack_icon }}"
@@ -12,10 +13,9 @@ if [ "${TEXT}" == "" ]; then
     exit 0
 fi
 
-MESSAGE="{\"channel\": \"#${CHANNEL}\", \"icon_emoji\": \"${ICON}\", \"username\": \"${HOSTNAME}\", \"text\": \"${TEXT_PREFIX}\"}"
+MESSAGE="{\"channel\": \"#${CHANNEL}\", \"icon_emoji\": \"${ICON}\", \"username\": \"${HOSTNAME}\", \"text\": \"${TEXT_PREFIX}\", \"attachments\":[{\"text\": \"${TEXT}\"}]}"
 
 RESULT=$(echo $MESSAGE \
-| jq ".text += \"${TEXT}\"" \
 | curl -s -X POST \
 --data-binary @- \
 ${WEBHOOK_URL})
