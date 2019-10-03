@@ -16,6 +16,7 @@
 
   - name: apt-get clean
     shell: apt-get clean
+    ignore_errors: true
 
   - name: Updating host using apt
     apt:
