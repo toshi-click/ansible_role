@@ -12,7 +12,9 @@
 - block:
   - name: install aptitude
     apt:
-      pkg: aptitude
+      name: aptitude
+      update_cache: yes
+      cache_valid_time: 3600
 
   - name: apt-get clean
     shell: apt-get clean
@@ -20,9 +22,11 @@
 
   - name: Updating host using apt
     apt:
+      name: "*"
       upgrade: yes
       state: present
       update_cache: yes
       cache_valid_time: 3600
+    ignore_errors: true
   # Debian・Ubuntu向け設定ここまで
   when: "ansible_os_family == 'Debian'"
