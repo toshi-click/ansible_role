@@ -1,0 +1,209 @@
+---
+- name: add k8s apt-key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: add k8s apt repository
+  apt_repository:
+    repo: 'deb https://apt.kubernetes.io/ kubernetes-xenial main'
+    state: present
+    filename: kubernetes
+    update_cache: yes
+
+- name: apt install tools
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+  with_items:
+    - apt-transport-https
+    - curl
+    - vim
+    - jq
+
+- name: apt install k8s
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+  with_items:
+    - kubelet
+    - kubeadm
+    - kubectl
+    - docker-ce
+
+- name: hold packages
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  with_items:
+    - kubelet
+    - kubeadm
+    - kubectl
+    - docker-ce
+
+- name: ensure net.bridge.bridge-nf-call-ip6tables is set to 1
+  sysctl:
+    name: net.bridge.bridge-nf-call-ip6tables
+    value: 1
+    state: present
+
+- name: ensure net.bridge.bridge-nf-call-iptables is set to 1
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: 1
+    state: present
+
+- name: systemd start　docker
+  systemd:
+    name: docker
+    state: started
+
+- name: add modules
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - ip_vs_rr
+    - ip_vs_wrr
+    - ip_vs_sh
+    - ip_vs
+
+- name: Remove swapfile from /etc/fstab
+  mount:
+    name: swap
+    fstype: swap
+    state: absent
+
+- name: Disable swap
+  command: swapoff -a
+  when: ansible_swaptotal_mb > 0
+
+# virtualboxの場合はインターフェースの
+- block:
+  when: kubernetes_virtualbox_flag
+  - name: get ipv4 address
+    command: bash -c "/sbin/ip -f inet -o addr show | grep {{ kubernetes_virtualbox_network }}　| awk \{'print $4'\} | cut -d/ -f 1"
+    register: get_ipv4_address
+    check_mode: no
+    changed_when: false
+
+  - name: put /etc/default/kubelet
+    template:
+      src: kubelet
+      dest: /etc/default/kubelet
+      owner: root
+      group: root
+      mode: 0644
+    when: get_ipv4_address
+    notify: restart kubelet
+
+# masterノードの場合の処理
+- block:
+  when: kubernetes_master_flag
+
+  - name: get ipv4 address
+    command: bash -c "/sbin/ip -f inet -o addr show | grep {{ kubernetes_master_network }}　| awk \{'print $4'\} | cut -d/ -f 1"
+    register: get_ipv4_address
+    check_mode: no
+    changed_when: false
+
+  # kubeadm initの実行 Flannelの場合
+  - name: kubernetes init Flannel
+    shell: "bash -lc 'kubeadm init --apiserver-advertise-address={{ get_ipv4_address }} --apiserver-cert-extra-sans={{ get_ipv4_address }} --node-name {{ kubernetes_hostname }} --pod-network-cidr={{ kubernetes_flannel_pod_network_cidr }}'"
+    register: kubernetes_init_register
+    check_mode: no
+    changed_when: false
+    when: kubernetes_flannel_flag
+
+  # kubeadm initの実行 Calicoの場合
+  - name: kubernetes init Calico
+    shell: "bash -lc 'kubeadm init --apiserver-advertise-address={{ get_ipv4_address }} --apiserver-cert-extra-sans={{ get_ipv4_address }} --node-name {{ kubernetes_hostname }} --pod-network-cidr={{ kubernetes_calico_pod_network_cidr }}'"
+    register: kubernetes_init_register
+    check_mode: no
+    changed_when: false
+    when: kubernetes_calico_flag
+
+  # 指定ユーザーがkubectlを実行できるようにする
+  - name: "create directory /home/{{ item }}/.kube"
+    file:
+      path: "/home/{{ item }}/.kube"
+        owner: "{{ item }}"
+        group: "{{ item }}"
+      mode: 0755
+      state: directory
+    with_items:
+      - "{{ kubernetes_execute_users }}"
+
+  - name: Allow users to use kubectl /etc/kubernetes/admin.conf copy
+    copy:
+      src: /etc/kubernetes/admin.conf
+      dest: "/home/{{ item }}/.kube/config"
+      remote_src: true
+      owner: "{{ item }}"
+      group: "{{ item }}"
+    with_items:
+      - "{{ kubernetes_execute_users }}"
+
+  # Flannelのインストール
+  - name: kubernetes install Flannel
+    shell: "kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
+    register: kubernetes_flannel_install_register
+    check_mode: no
+    changed_when: false
+    when: kubernetes_flannel_flag
+    environment:
+      KUBECONFIG: /etc/kubernetes/admin.conf
+
+  # Calicoのインストール
+  - name: kubernetes install Calico
+    shell: |
+      kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/rbac-kdd.yaml
+      kubectl apply -f https://docs.projectcalico.org/v3.3/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml
+    register: kubernetes_calico_install_register
+    check_mode: no
+    changed_when: false
+    when: kubernetes_calico_flag
+    environment:
+      KUBECONFIG: /etc/kubernetes/admin.conf
+
+  # kubectl joinコマンドを保存する
+  - name: Save the kubectl join command
+    shell: bash -lc "kubeadm token create --print-join-command > /etc/kubeadm_join_cmd.sh && chmod +x /etc/kubeadm_join_cmd.sh"
+    check_mode: no
+    changed_when: false
+
+  # helm
+  - name: get helm download
+    get_url:
+      url: "{{ kubernetes_helm_download_url }}"
+      dest: /usr/local/src/
+      sha256sum: 38614a665859c0f01c9c1d84fa9a5027364f936814d1e47839b05327e400bf55
+
+  # ダウンロードファイルを解凍する
+  - name: Unzip the helm download file
+    shell: "tar zxf helm-v{{ kubernetes_helm_version }}-linux-amd64.tar.gz"
+    args:
+      chdir: "/usr/local/src/"
+
+  - name: "copy helm"
+      shell: "cp -rp helm /usr/local/bin/"
+      args:
+        chdir: "/usr/local/src/helm-v{{ kubernetes_helm_version }}-linux-amd64"
+
+  # kubens/kubectx
+  - name: git clone kubens/kubectx
+    git:
+      repo: https://github.com/ahmetb/kubectx.git
+      dest: /usr/local/kubectx
+
+  - name: create link to kubectx
+    file:
+      src: /usr/local/kubectx/kubectx
+      dest: /usr/local/bin/kubectx
+      state: link
+
+  - name: create link to kubens
+    file:
+      src: /usr/local/kubectx/kubens
+      dest: /usr/local/bin/kubens
+      state: link

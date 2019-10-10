@@ -1,0 +1,24 @@
+---
+# masterノードかどうかのフラグ
+kubernetes_master_flag: false
+# ノードからアクセスするためのサーバーのIPアドレス
+kubernetes_master_network: 192.168
+
+# 開発用にvirtualbox用の値
+kubernetes_virtualbox_flag: false
+kubernetes_virtualbox_network: 192.168
+
+kubernetes_hostname: localhost.localdomain
+
+kubernetes_flannel_flag: true
+kubernetes_flannel_pod_network_cidr: 10.244.0.0/16
+
+kubernetes_calico_flag: false
+kubernetes_calico_pod_network_cidr: 192.168.0.0/16
+
+kubernetes_execute_users:
+  - toshi
+
+# https://github.com/helm/helm/releases
+kubernetes_helm_version: 2.14.3
+kubernetes_helm_download_url: https://get.helm.sh/helm-v{{ kubernetes_helm_version }}-linux-amd64.tar.gz
