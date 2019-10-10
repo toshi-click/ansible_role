@@ -10,15 +10,22 @@
 
 # Debian・Ubuntu向け設定
 - block:
+  - name: delete apt lock files
+    file:
+      path: "{{ item }}"
+      state: absent
+    with_items:
+      - /var/lib/apt/lists/lock
+      - /var/cache/apt/archives/lock
+
+  - name: Updating apt
+    shell: apt update -y --allow-releaseinfo-change
+
   - name: install aptitude
     apt:
       name: aptitude
       update_cache: yes
       cache_valid_time: 3600
-
-  - name: apt-get clean
-    shell: apt-get clean
-    ignore_errors: true
 
   - name: Updating host using apt
     apt:
