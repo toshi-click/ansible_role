@@ -34,6 +34,6 @@
       state: present
       update_cache: yes
       cache_valid_time: 3600
-    ignore_errors: true
+    ignore_errors: yes
   # Debian・Ubuntu向け設定ここまで
   when: "ansible_os_family == 'Debian'"

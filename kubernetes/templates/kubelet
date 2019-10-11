@@ -1,1 +1,1 @@
-KUBELET_EXTRA_ARGS=--node-ip={{ get_ipv4_address }}
+KUBELET_EXTRA_ARGS=--node-ip={{ get_ipv4_address.stdout }}

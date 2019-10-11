@@ -96,11 +96,10 @@
     daemon_reload: yes
   ignore_errors: true
 
-# docker ipv4 forward-----------------------------------------------------------------------------------------
-- name: "setting ipv4 forward for docker"
-  template:
-    src: "10-ipv4.conf.j2"
-    dest: "/etc/sysctl.d/10-ipv4.conf"
-    owner: root
-    group: root
-    mode: 0644
+- name: add kernel parameters and reload
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: 1
+    state: present
+    reload: yes
+    ignoreerrors: yes
