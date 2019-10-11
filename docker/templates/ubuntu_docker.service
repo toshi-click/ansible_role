@@ -2,7 +2,7 @@
 Description=Docker Application Container Engine
 Documentation=https://docs.docker.com
 BindsTo=containerd.service
-After=network-online.target firewalld.service
+After=network-online.target firewalld.service containerd.service
 Wants=network-online.target
 Requires=docker.socket
 
@@ -12,9 +12,9 @@ Type=notify
 # exists and systemd currently does not support the cgroup feature set required
 # for containers run by docker
 {% if docker_remote_api_enable == "no" %}
-ExecStart=/usr/bin/dockerd -H fd://
+ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
 {% else %}
-ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:{{ docker_remote_api_port }}
+ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock -H tcp://0.0.0.0:{{ docker_remote_api_port }}
 {% endif %}
 
 ExecReload=/bin/kill -s HUP $MAINPID
@@ -38,7 +38,7 @@ LimitNOFILE=infinity
 LimitNPROC=infinity
 LimitCORE=infinity
 
-# Comment TasksMax if your systemd version does not supports it.
+# Comment TasksMax if your systemd version does not support it.
 # Only systemd 226 and above support this option.
 TasksMax=infinity
 
