@@ -41,17 +41,21 @@
     - kubectl
     - docker-ce
 
-- name: ensure net.bridge.bridge-nf-call-ip6tables is set to 1
+- name: add kernel parameters and reload
   sysctl:
-    name: net.bridge.bridge-nf-call-ip6tables
-    value: 1
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
     state: present
-
-- name: ensure net.bridge.bridge-nf-call-iptables is set to 1
-  sysctl:
-    name: net.bridge.bridge-nf-call-iptables
-    value: 1
-    state: present
+    reload: yes
+    ignoreerrors: yes
+    sysctl_file: /etc/sysctl.d/k8s.conf
+  with_items:
+    - name: net.bridge.bridge-nf-call-ip6tables
+      value: 1
+    - name: net.bridge.bridge-nf-call-iptables
+      value: 1
+    - name: net.ipv4.ip_forward
+      value: 1
 
 - name: systemd start　docker
   systemd:
@@ -105,21 +109,37 @@
     check_mode: no
     changed_when: false
 
-  # kubeadm initの実行 Flannelの場合
-  - name: kubernetes init Flannel
+  # kubeadm initの実行 VirtualBox で　Flannelの場合
+  - name: kubernetes init VirtualBox Flannel
     shell: "bash -lc 'kubeadm init --apiserver-advertise-address={{ get_ipv4_address.stdout }} --apiserver-cert-extra-sans={{ get_ipv4_address.stdout }} --node-name {{ kubernetes_hostname }} --pod-network-cidr={{ kubernetes_flannel_pod_network_cidr }}'"
     register: kubernetes_init_register
     check_mode: no
     changed_when: false
-    when: kubernetes_flannel_flag
+    when:
+      - kubernetes_flannel_flag
+      - kubernetes_virtualbox_flag
+    ignore_errors: yes
 
-  # kubeadm initの実行 Calicoの場合
-  - name: kubernetes init Calico
+  - debug: var=kubernetes_init_register
+    when:
+      - kubernetes_flannel_flag
+      - kubernetes_virtualbox_flag
+
+  # kubeadm initの実行 VirtualBox で　Calicoの場合
+  - name: kubernetes init VirtualBox Calico
     shell: "bash -lc 'kubeadm init --apiserver-advertise-address={{ get_ipv4_address.stdout }} --apiserver-cert-extra-sans={{ get_ipv4_address.stdout }} --node-name {{ kubernetes_hostname }} --pod-network-cidr={{ kubernetes_calico_pod_network_cidr }}'"
     register: kubernetes_init_register
     check_mode: no
     changed_when: false
-    when: kubernetes_calico_flag
+    when:
+      - kubernetes_calico_flag
+      - kubernetes_virtualbox_flag
+    ignore_errors: yes
+
+  - debug: var=kubernetes_init_register
+    when:
+      - kubernetes_calico_flag
+      - kubernetes_virtualbox_flag
 
   # 指定ユーザーがkubectlを実行できるようにする
   - name: "create directory /home/{{ item }}/.kube"
@@ -177,16 +197,25 @@
       dest: /usr/local/src/
       sha256sum: 38614a665859c0f01c9c1d84fa9a5027364f936814d1e47839b05327e400bf55
 
+  - name: "create directory /usr/local/src/helm"
+    file:
+      path: "/usr/local/src/helm"
+      owner: root
+      group: root
+      mode: 0755
+      state: directory
+
   # ダウンロードファイルを解凍する
-  - name: Unzip the helm download file
-    shell: "tar zxf helm-v{{ kubernetes_helm_version }}-linux-amd64.tar.gz"
-    args:
-      chdir: "/usr/local/src/"
+  - name: unarchive the helm download file
+    unarchive:
+      src: "/usr/local/src/helm-v{{ kubernetes_helm_version }}-linux-amd64.tar.gz"
+      dest: /usr/local/src/helm
+      remote_src: yes
 
   - name: "copy helm"
     shell: "cp -rp helm /usr/local/bin/"
     args:
-      chdir: "/usr/local/src/helm-v{{ kubernetes_helm_version }}-linux-amd64"
+      chdir: "/usr/local/src/helm/linux-amd64"
 
   # kubens/kubectx
   - name: git clone kubens/kubectx
@@ -205,4 +234,14 @@
       src: /usr/local/kubectx/kubens
       dest: /usr/local/bin/kubens
       state: link
+
+  # Masterノードにもデプロイしたい場合の対応
+  - name: kubernetes init VirtualBox Flannel
+    shell: "bash -lc 'kubectl taint nodes {{ kubernetes_hostname }} node-role.kubernetes.io/master:NoSchedule-'"
+    check_mode: no
+    changed_when: false
+    when:
+      - kubernetes_master_deploy_flag
+    ignore_errors: yes
+
   when: kubernetes_master_flag

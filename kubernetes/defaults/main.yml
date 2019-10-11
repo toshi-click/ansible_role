@@ -1,6 +1,8 @@
 ---
 # masterノードかどうかのフラグ
 kubernetes_master_flag: false
+# masterノードにもデプロイしたい場合はtrueにする
+kubernetes_master_deploy_flag: false
 # ノードからアクセスするためのサーバーのIPアドレス
 kubernetes_master_network: 192.168
 
