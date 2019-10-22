@@ -23,6 +23,7 @@ samba_load_homes: false
 samba_shares_root: '/share'
 samba_shares: []
 samba_users: []
+samba_only_users: []
 samba_allow_ip: "127. 172.16. 192.168."
 samba_mitigate_cve_2017_7494: true
 
