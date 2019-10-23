@@ -78,6 +78,14 @@
   with_items: "{{ samba_services }}"
   tags: samba
 
+- name: "samba only users create"
+  user:
+    name: "{{ item }}"
+    state: present
+    shell: /sbin/nologin
+  with_items: "{{ samba_only_users }}"
+  when: samba_only_users|length > 0
+
 - name: Create Samba users if they don't exist yet
   shell: >
     set -o nounset -o pipefail -o errexit &&
