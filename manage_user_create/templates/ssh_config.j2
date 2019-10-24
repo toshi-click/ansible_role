@@ -17,25 +17,37 @@ Host gitlab.com
   IdentityFile ~/.ssh/gitkey
 
 Host 127.0.0.1
-StrictHostKeyChecking no
-UserKnownHostsFile=/dev/null
+  User toshi
+  IdentityFile ~/.ssh/toshi_sshkey
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
 
 Host 192.168.0.0/16
-StrictHostKeyChecking no
-UserKnownHostsFile=/dev/null
+  User toshi
+  IdentityFile ~/.ssh/toshi_sshkey
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
 
 Host 172.16.0.0/12
-StrictHostKeyChecking no
-UserKnownHostsFile=/dev/null
+  User toshi
+  IdentityFile ~/.ssh/toshi_sshkey
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
 
 Host *.toshi.click
   User toshi
   IdentityFile ~/.ssh/toshi_sshkey
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
 
 Host *.shigure.click
   User toshi
   IdentityFile ~/.ssh/toshi_sshkey
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
 
 Host *.test
   User toshi
   IdentityFile ~/.ssh/toshi_sshkey
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
