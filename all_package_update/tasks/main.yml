@@ -29,7 +29,8 @@
 
   - name: Updating host using apt
     apt:
-      upgrade: yes
+      name: "*"
+      state: latest
       update_cache: yes
       cache_valid_time: 3600
     ignore_errors: yes
