@@ -22,3 +22,14 @@
     owner: root
     group: root
     mode: 0755
+  when: ansible_distribution == "CentOS"
+
+# ssh ログインでメール送る設定
+- name: sshrc
+  template:
+    src: "ubuntu_sshrc.j2"
+    dest: "/etc/ssh/sshrc"
+    owner: root
+    group: root
+    mode: 0755
+  when: ansible_distribution == "Ubuntu"
