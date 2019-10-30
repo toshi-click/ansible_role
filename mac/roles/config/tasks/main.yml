@@ -42,7 +42,7 @@
   osx_defaults:
     key: InitialKeyRepeat
     type: int
-    value: 10
+    value: "{{ mac_key_repeat_waiting_time }}"
     state: present
 
 # キーリピート間隔時間
@@ -50,7 +50,7 @@
   osx_defaults:
     key: KeyRepeat
     type: int
-    value: 1
+    value: "{{ mac_key_repeat_interval_time }}"
     state: present
 
 # バッテリー残量設定

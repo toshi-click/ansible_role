@@ -4,3 +4,6 @@ user_home_dir: "/Users/{{ login_user_name }}"
 
 mac_dock_icon_size: 60
 mac_dock_auto_hide: True
+
+mac_key_repeat_waiting_time: 25
+mac_key_repeat_interval_time: 3
