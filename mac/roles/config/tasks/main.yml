@@ -7,20 +7,12 @@
     type: string
     value: Dark
 
-- name: "General - Automatically hide and show the menu bar"
-  osx_defaults:
-    domain: 'NSGlobalDomain'
-    key: '_HIHideMenuBar'
-    type: bool
-    value: false
-  notify: restart MenuBar
-
 - name: 'Dock tilesize'
   osx_defaults:
     domain: 'com.apple.dock'
     key: 'tilesize'
     type: 'float'
-    value: 60
+    value: "{{ mac_dock_icon_size }}"
     state: 'present'
   notify: 'restart dock'
 
@@ -29,7 +21,7 @@
     domain: 'com.apple.dock'
     key: 'autohide'
     type: 'bool'
-    value: 'TRUE'
+    value: "{{ mac_dock_auto_hide }}"
     state: 'present'
   notify: 'restart dock'
 
@@ -50,7 +42,7 @@
   osx_defaults:
     key: InitialKeyRepeat
     type: int
-    value: 50
+    value: 10
     state: present
 
 # キーリピート間隔時間
@@ -58,7 +50,7 @@
   osx_defaults:
     key: KeyRepeat
     type: int
-    value: 5
+    value: 1
     state: present
 
 # バッテリー残量設定
@@ -116,59 +108,6 @@
     line: '%admin ALL = (ALL) NOPASSWD: ALL'
     validate: 'visudo -cf %s'
 
-#- homebrew:
-#    name: bash
-#    path: /usr/local/bin/
-#    state: present
-#  when: ansible_os_family == 'Darwin'
-#
-#- name: check if exists bash on macOS
-#  command: /usr/local/bin/bash --version
-#  register: check_bash_version
-#  when: ansible_os_family == 'Darwin'
-#  changed_when: no
-#
-#- name: change shell
-#  become: yes
-#  command: "chsh -s '/usr/local/bin/bash' {{ login_user_name }}"
-#  when: ansible_os_family == 'Darwin' and check_bash_version.rc == 0
-#
-#- name: "~/.ssh/config を設定"
-#  template:
-#    src: ".ssh/config"
-#    dest: "{{ user_home_dir }}/.ssh/config"
-#    mode: 0644
-#
-#- name: create .bashrc
-#  template:
-#    src: .bashrc.j2
-#    dest: "{{ user_home_dir }}/.bashrc"
-#
-#- name: create .inputrc
-#  template:
-#    src: .inputrc.j2
-#    dest: "{{ user_home_dir }}/.inputrc"
-#
-#- name: create .bash_alias
-#  template:
-#    src: .bash_alias.j2
-#    dest: "{{ user_home_dir }}/.bash_alias"
-#
-#- name: create .bash_profile
-#  template:
-#    src: .bash_profile.j2
-#    dest: "{{ user_home_dir }}/.bash_profile"
-#
-#- name: create .gitconfig
-#  template:
-#    src: .gitconfig.j2
-#    dest: "{{ user_home_dir }}/.gitconfig"
-#
-#- name: create .gitignore_global
-#  template:
-#    src: .gitignore_global.j2
-#    dest: "{{ user_home_dir }}/.gitignore_global"
-
 ###############################################################################
 # Finder
 ###############################################################################
@@ -220,23 +159,9 @@
     type: bool
     value: false
 
-#- name: スクリーンキャプチャの保存先を Pictures フォルダにする
-#  osx_defaults:
-#    domain: "com.apple.screencapture"
-#    name: location
-#    type: string
-#    value: ~/Pictures
-
 # 保存先を指定するダイアログを簡易的なものにしない
 - name: save target specify dialog simple do not
   osx_defaults:
     key: "NSNavPanelExpandedStateForSaveMode"
     type: bool
     value: true
-
-#- name: 未確認のアプリケーションを実行する際のダイアログを無効にする
-#  osx_defaults:
-#    key: "com.apple.LaunchServices"
-#    name: LSQuarantine
-#    type: bool
-#    value: false
