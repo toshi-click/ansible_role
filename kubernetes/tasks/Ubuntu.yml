@@ -122,11 +122,6 @@
       - kubernetes_virtualbox_flag
     ignore_errors: yes
 
-  - debug: var=kubernetes_init_register
-    when:
-      - kubernetes_flannel_flag
-      - kubernetes_virtualbox_flag
-
   # kubeadm initの実行 VirtualBox で　Calicoの場合
   - name: kubernetes init VirtualBox Calico
     shell: "bash -lc 'kubeadm init --apiserver-advertise-address={{ get_ipv4_address.stdout }} --apiserver-cert-extra-sans={{ get_ipv4_address.stdout }} --node-name {{ kubernetes_hostname }} --pod-network-cidr={{ kubernetes_calico_pod_network_cidr }}'"
@@ -138,10 +133,27 @@
       - kubernetes_virtualbox_flag
     ignore_errors: yes
 
-  - debug: var=kubernetes_init_register
+    # kubeadm initの実行 Flannelの場合
+  - name: kubernetes init Flannel
+    shell: "bash -lc 'kubeadm init --node-name {{ kubernetes_hostname }} --pod-network-cidr={{ kubernetes_flannel_pod_network_cidr }}'"
+    register: kubernetes_init_register
+    check_mode: no
+    changed_when: false
+    when:
+      - kubernetes_flannel_flag
+      - not kubernetes_virtualbox_flag
+    ignore_errors: yes
+
+    # kubeadm initの実行　Calicoの場合
+  - name: kubernetes init Calico
+    shell: "bash -lc 'kubeadm init --node-name {{ kubernetes_hostname }} --pod-network-cidr={{ kubernetes_calico_pod_network_cidr }}'"
+    register: kubernetes_init_register
+    check_mode: no
+    changed_when: false
     when:
       - kubernetes_calico_flag
-      - kubernetes_virtualbox_flag
+      - not kubernetes_virtualbox_flag
+    ignore_errors: yes
 
   # 指定ユーザーがkubectlを実行できるようにする
   - name: "create directory /home/{{ item }}/.kube"
@@ -185,12 +197,6 @@
     when: kubernetes_calico_flag
     environment:
       KUBECONFIG: /etc/kubernetes/admin.conf
-
-  # kubectl joinコマンドを保存する
-  - name: Save the kubectl join command
-    shell: bash -lc "kubeadm token create --print-join-command > /etc/kubeadm_join_cmd.sh && chmod +x /etc/kubeadm_join_cmd.sh"
-    check_mode: no
-    changed_when: false
 
   # helm
   - name: get helm download
@@ -238,7 +244,7 @@
       state: link
 
   # Masterノードにもデプロイしたい場合の対応
-  - name: kubernetes init VirtualBox Flannel
+  - name: kubernetes set master deploy set
     shell: "bash -lc 'kubectl taint nodes {{ kubernetes_hostname }} node-role.kubernetes.io/master:NoSchedule-'"
     check_mode: no
     changed_when: false
