@@ -17,7 +17,23 @@
       owner: root
       group: root
       mode: 0644
+  # hosts.allow -----------------------------------------------------------------------------------------
+  - name: "/etc/hosts.allow"
+    template:
+      src: "hosts.allow.j2"
+      dest: "/etc/hosts.allow"
+      owner: root
+      group: root
+      mode: 0644
 
+  # hosts.deny -----------------------------------------------------------------------------------------
+  - name: "/etc/hosts.deny"
+    template:
+      src: "hosts.deny.j2"
+      dest: "/etc/hosts.deny"
+      owner: root
+      group: root
+      mode: 0644
   # CentOS向けここまで
   when: "ansible_os_family == 'RedHat'"
 
@@ -33,21 +49,3 @@
       mode: 0440
   # Debian・Ubuntu向け設定ここまで
   when: "ansible_os_family == 'Debian'"
-
-# hosts.allow -----------------------------------------------------------------------------------------
-- name: "/etc/hosts.allow"
-  template:
-    src: "hosts.allow.j2"
-    dest: "/etc/hosts.allow"
-    owner: root
-    group: root
-    mode: 0644
-
-# hosts.deny -----------------------------------------------------------------------------------------
-- name: "/etc/hosts.deny"
-  template:
-    src: "hosts.deny.j2"
-    dest: "/etc/hosts.deny"
-    owner: root
-    group: root
-    mode: 0644
