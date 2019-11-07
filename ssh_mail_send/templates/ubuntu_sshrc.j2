@@ -8,5 +8,9 @@ do
     fi
 done < {{ ssh_mail_send_trust_list_file }}
 DATE=`date +"%Y/%m/%d %p %I:%M:%S"`
-echo "${USER} has logged in from ${SSH_CLIENT} at ${DATE} to ${HOSTNAME}" | mail -s "${HOSTNAME} sshd login alert" -aFrom:root@${HOSTNAME} root@${HOSTNAME}
+ (
+echo "Subject: $(hostname) - ${USER} has logged in from ${SSH_CLIENT} at ${DATE}"
+echo "To: root"
+echo "${USER} has logged in from ${SSH_CLIENT} at ${DATE} to $(hostname)"
+) | /usr/sbin/sendmail root
 {% endif %}
