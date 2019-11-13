@@ -155,6 +155,23 @@
       - not kubernetes_virtualbox_flag
     ignore_errors: yes
 
+  # rootユーザーがkubectlを実行できるようにする
+  - name: "create directory /root/.kube"
+    file:
+      path: "/root/.kube"
+      owner: root
+      group: root
+      mode: 0755
+      state: directory
+
+  - name: Allow root users to use kubectl /etc/kubernetes/admin.conf copy
+    copy:
+      src: /etc/kubernetes/admin.conf
+      dest: "/root/.kube/config"
+      remote_src: true
+      owner: root
+      group: root
+
   # 指定ユーザーがkubectlを実行できるようにする
   - name: "create directory /home/{{ item }}/.kube"
     file:
