@@ -15,7 +15,7 @@
   apt:
     name: "{{ item }}"
     update_cache: yes
-    cache_valid_time: 360
+    cache_valid_time: 3600
   with_items:
     - apt-transport-https
     - curl
@@ -26,7 +26,7 @@
   apt:
     name: "{{ item }}"
     update_cache: yes
-    cache_valid_time: 360
+    cache_valid_time: 3600
   with_items:
     - kubelet
     - kubeadm

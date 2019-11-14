@@ -1,0 +1,14 @@
+---
+nfs_shared_directory: /var/opt/nfs
+nfs_shared_allow_ip_band:
+  - 127.0.0.0/24
+  - 192.168.0.0/16
+  - 172.16.0.0/16
+
+nfs_port: 49154
+
+nfs_statd_in_port: 49152
+nfs_statd_out_port: 49155
+
+nfs_nlockmgr_tcp_port: 49153
+nfs_nlockmgr_udp_port: 49153

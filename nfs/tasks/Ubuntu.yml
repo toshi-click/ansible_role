@@ -1,0 +1,50 @@
+---
+- name: apt install nfs tools
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - nfs-kernel-server
+
+# 共有ディレクトリの用意
+- name: "create directory {{ nfs_shared_directory }}"
+  file:
+    path: "{{ nfs_shared_directory }}"
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+
+- name: put /etc/exports files
+  template:
+    src: "etc/exports"
+    dest: "/etc/exports"
+
+- name: put nfs setting files
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: etc/exports , dest: /etc/exports }
+    - { src: etc/default/nfs-common , dest: /etc/default/nfs-common }
+    - { src: etc/modprobe.d/options.local , dest: /etc/modprobe.d/options.local }
+    - { src: etc/systemd/system/nfs-kernel-server.service , dest: /etc/systemd/system/nfs-kernel-server.service }
+
+- name: put kubernetes yaml files
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "{{ item.mode }}"
+  with_items:
+    - { src: nfs_deployment.yaml , mode: "0755", dest: /usr/local/src/nfs_deployment.yaml }
+    - { src: nfs_storage_class.yaml , mode: "0755", dest: /usr/local/src/nfs_storage_class.yaml }
+
+- name: systemd reloaded
+  service:
+    name: "{{ item }}"
+    state: started
+    daemon_reload: yes
+  with_items:
+    - nfs-server
+    - nfs-kernel-server

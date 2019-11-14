@@ -1,0 +1,1 @@
+options lockd nlm_udpport={{ nfs_nlockmgr_udp_port }} nlm_tcpport={{ nfs_nlockmgr_tcp_port }}
