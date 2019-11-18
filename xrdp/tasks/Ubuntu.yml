@@ -20,14 +20,6 @@
     regexp: '^new_cursors=true'
     line: 'new_cursors=false'
 
-#- name: ""
-#  lineinfile:
-#    path: /etc/xrdp/xrdp.ini
-#    regexp: '^new_cursors=true'
-#    line: 'new_cursors=false'
-#  allowed_users=anybody
-#  /etc/X11/Xwrapper.config
-
 - name: "xrdpログイン時にsslキーが読み込めずに接続失敗するのでパーミッション設定"
   file:
     path: /etc/ssl/private/
@@ -44,6 +36,11 @@
   copy:
     src: xrdp-color-manager.pkla
     dest: "/etc/polkit-1/localauthority/50-local.d/xrdp-color-manager.pkla"
+
+- name: "カラープロファイルを作成するには認証が必要ですを抑止"
+  copy:
+    src: etc/polkit-1/rules.d/02-allow-colord.rules
+    dest: "/etc/polkit-1/rules.d/02-allow-colord.rules"
 
 - name: Restart polkit services
   service:
