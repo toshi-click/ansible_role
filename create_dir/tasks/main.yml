@@ -1,0 +1,31 @@
+- name: "create project root directory {{ project_root_dir }}"
+  file:
+    path: "{{ project_root_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "create project cert directory {{ project_cert_dir }}"
+  file:
+    path: "{{ project_cert_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "create project script directory {{ script_dir }}"
+  file:
+    path: "{{ script_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "create project config directory {{ config_dir }}"
+  file:
+    path: "{{ config_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755

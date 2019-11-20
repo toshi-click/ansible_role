@@ -1,0 +1,6 @@
+---
+sysctl_setting:
+  # elastic search用
+  - {name: "vm.max_map_count", value: 262144}
+  # docker用
+  - {name: "net.ipv4.ip_forward", value: 1}

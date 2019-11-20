@@ -1,15 +1,13 @@
-- name: "create group {{ ansible_user.group }}"
+- name: "create group {{ ansible_user_group }}"
   group:
-    name: "{{ ansible_user.group }}"
-    gid: "{{ ansible_user.gid }}"
+    name: "{{ ansible_user_group }}"
 
-- name: "users exist {{ ansible_user.name }}  {{ ansible_user.group }}"
+- name: "users exist name:{{ ansible_user_name }} group:{{ ansible_user_group }}"
   user:
-    name: "{{ ansible_user.name }}"
+    name: "{{ ansible_user_name }}"
     state: present
-    uid: "{{ ansible_user.uid }}"
-    password: "{{ ansible_user.password }}"
-    group: "{{ ansible_user.group }}"
+    password: "{{ ansible_user_password }}"
+    group: "{{ ansible_user_group }}"
 
 - name: user join to other group
   user:
@@ -17,27 +15,27 @@
     append: yes
     groups: "{{ ansible_user.subgroups }}"
 
-- name: "directory create /home/{{ ansible_user.name }}/.ssh"
+- name: "directory create /home/{{ ansible_user_name }}/.ssh"
   file:
-    path: "/home/{{ ansible_user.name }}/.ssh"
+    path: "/home/{{ ansible_user_name }}/.ssh"
     state: directory
-    owner: "{{ ansible_user.name }}"
-    group: "{{ ansible_user.group }}"
+    owner: "{{ ansible_user_name }}"
+    group: "{{ ansible_user_group }}"
     mode: 0700
 
-- name: "create /home/{{ ansible_user.name }}/.ssh/config"
+- name: "create /home/{{ ansible_user_name }}/.ssh/config"
   template:
     src: "ssh_config.j2"
-    dest: "/home/{{ ansible_user.name }}/.ssh/config"
-    owner: "{{ ansible_user.name }}"
-    group: "{{ ansible_user.group }}"
-    mode: 0644
+    dest: "/home/{{ ansible_user_name }}/.ssh/config"
+    owner: "{{ ansible_user_name }}"
+    group: "{{ ansible_user_group }}"
+    mode: 0600
 
 # add key
 - name: authorized_keys
   template:
     src: "authorized_keys.j2"
-    dest: /home/{{ansible_user.name}}/.ssh/authorized_keys
-    owner: "{{ ansible_user.name }}"
-    group: "{{ ansible_user.group }}"
+    dest: /home/{{ansible_user_name}}/.ssh/authorized_keys
+    owner: "{{ ansible_user_name }}"
+    group: "{{ ansible_user_group }}"
     mode: 0600

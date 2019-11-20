@@ -1,0 +1,8 @@
+- name: setting kernel parameters and reload
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    reload: yes
+  when: sysctl_setting|length > 0
+  with_items: sysctl_setting

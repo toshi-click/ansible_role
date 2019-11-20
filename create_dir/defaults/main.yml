@@ -1,0 +1,5 @@
+---
+project_root_dir: /app
+project_cert_dir: "{{ project_root_dir }}/certs"
+script_dir: "{{ project_root_dir }}/scripts"
+config_dir: "{{ project_root_dir }}/config"
