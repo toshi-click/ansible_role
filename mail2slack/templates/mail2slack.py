@@ -54,7 +54,7 @@ def get_body_from_email(message):
             else:
                 return payload.decode()
         else:
-            return ""
+            return message
 
     except:
         return payload
