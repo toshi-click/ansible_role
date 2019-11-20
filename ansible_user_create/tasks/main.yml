@@ -1,19 +1,9 @@
-- name: "create group {{ ansible_user_group }}"
-  group:
-    name: "{{ ansible_user_group }}"
-
 - name: "users exist name:{{ ansible_user_name }} group:{{ ansible_user_group }}"
   user:
     name: "{{ ansible_user_name }}"
     state: present
     password: "{{ ansible_user_password }}"
     group: "{{ ansible_user_group }}"
-
-- name: user join to other group
-  user:
-    name: "{{ ansible_user.name }}"
-    append: yes
-    groups: "{{ ansible_user.subgroups }}"
 
 - name: "directory create /home/{{ ansible_user_name }}/.ssh"
   file:

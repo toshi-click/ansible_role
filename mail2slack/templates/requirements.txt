@@ -1,0 +1,4 @@
+slackweb
+requests
+configparser
+autopep8

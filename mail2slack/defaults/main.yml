@@ -1,0 +1,14 @@
+---
+project_root_dir: /app
+script_dir: "{{ project_root_dir }}/scripts"
+
+mail2slack_python_path: /usr/bin/python3
+mail2slack_pip_path: /usr/bin/pip3
+mail2slack_config_file_path: "{{ config_dir }}/mail2slack.conf"
+
+mail2slack_deploy_path: "{{ script_dir }}/mail2slack"
+mail2slack_execute_path: "{{ mail2slack_deploy_path }}/mail2slack.py"
+
+slack_web_hook_url: ""
+slack_channel: "general"
+slack_icon: ":alien:"

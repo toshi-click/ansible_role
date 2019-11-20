@@ -1,53 +1,67 @@
-- name: postfix install
-  package:
-    name: postfix
-    state: latest
-  notify:
-    - enable postfix
+- name: "create {{ mail2slack_deploy_path }}"
+  file:
+    path: "{{ mail2slack_deploy_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
 
-- name: aliases set
+#- name: to mail required packages install
+#  package:
+#    name: "{{ item }}"
+#    state: latest
+#  with_items:
+#    - perl-Email-MIME
+#    - perl-JSON
+
+- name: requirements.txt set
   template:
-    src: "aliases.j2"
-    dest: /etc/aliases
+    src: "requirements.txt"
+    dest: "{{ mail2slack_deploy_path }}/requirements.txt"
     owner: root
     group: root
     mode: 0644
-  notify:
-    - restart postfix
 
-- name: newaliases
-  command: newaliases
-  check_mode: no
+- name: apt install pip3
+  apt:
+    name: python3-pip
+    update_cache: yes
+    cache_valid_time: 3600
+  when: "ansible_os_family == 'Debian'"
 
-# root宛メールをslackに通知するシェル配置
-- name: "/export作成"
-  file:
-    path: "/export"
-    state: directory
-    owner: root
-    group: root
-    mode: 0777
+- name: "{{ mail2slack_pip_path }} install requirements package"
+  shell: "{{ mail2slack_pip_path }} install -r requirements.txt"
+  args:
+    chdir: "{{ mail2slack_deploy_path }}"
 
-- name: "/export/bin作成"
-  file:
-    path: "/export/bin"
-    state: directory
-    owner: root
-    group: root
-    mode: 0777
-
-- name: to mail required packages install
-  package:
-    name: "{{ item }}"
-    state: latest
-  with_items:
-    - perl-Email-MIME
-    - perl-JSON
-
-- name: mail2slack sh set
+- name: mail2slack conf set
   template:
-    src: "mail2slack.j2"
-    dest: "/export/bin/mail2slack"
+    src: "config/mail2slack.conf"
+    dest: "{{ mail2slack_config_file_path }}"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: mail2slack.sh set
+  template:
+    src: "mail2slack.sh"
+    dest: "{{ mail2slack_deploy_path }}/mail2slack.sh"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: kick_mail2slack.sh set
+  template:
+    src: "kick_mail2slack.sh"
+    dest: "{{ mail2slack_deploy_path }}/kick_mail2slack.sh"
+    owner: root
+    group: root
+    mode: 0755
+
+- name: mail2slack py set
+  template:
+    src: "mail2slack.py"
+    dest: "{{ mail2slack_execute_path }}"
     owner: root
     group: root
     mode: 0755

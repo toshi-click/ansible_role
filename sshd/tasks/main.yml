@@ -1,12 +1,3 @@
-# ssh ログインでメール送る設定のべき等性確保のために空ファイル配置
-- name: sshrc
-  template:
-    src: "sshrc.j2"
-    dest: "/etc/ssh/sshrc"
-    owner: root
-    group: root
-    mode: 0755
-
 # Debian・Ubuntu向け設定
 - block:
   # sshd
