@@ -1,3 +1,7 @@
+- name: "create group {{ ansible_user_group }}"
+  group:
+    name: "{{ ansible_user_group }}"
+
 - name: "users exist name:{{ ansible_user_name }} group:{{ ansible_user_group }}"
   user:
     name: "{{ ansible_user_name }}"
