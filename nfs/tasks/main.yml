@@ -1,3 +1,0 @@
-# Operation check Only Ubuntu18.04
-- include: Ubuntu.yml
-  when: ansible_distribution == "Ubuntu"
