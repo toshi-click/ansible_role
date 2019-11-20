@@ -54,7 +54,7 @@ def get_body_from_email(message):
             else:
                 return payload.decode()
         else:
-            return message
+            return ""
 
     except:
         return payload
@@ -67,6 +67,10 @@ def parse_email(data):
     # datetime = get_datetime_from_email(message)
     body = get_body_from_email(message).split("\n")
     # event = get_event_from_email(message)
+    if body:
+        body = body
+    else:
+        body = message
 
     return {
         "subject": subject,
