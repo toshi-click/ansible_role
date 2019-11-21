@@ -68,9 +68,12 @@ def parse_email(data):
     body = get_body_from_email(message).split("\n")
     # event = get_event_from_email(message)
     if body:
-        body = body
+        if len(body) > 10:
+            body = body
+        else:
+            body = data
     else:
-        body = message
+        body = data
 
     return {
         "subject": subject,
@@ -115,26 +118,27 @@ def post_to_slack(data):
         'channel': channel,
         'username': username,
         'icon_emoji': icon,
+        'text': data['subject'],
         'attachments': [{
             "text": data['body'],
-            "color": color,
-            "fields": [
-                {
-                    "type": "mrkdwn",
-                    "value": "*" + data['subject'] + "*",
-                    "short": False
-                },
+            # "color": color,
+            # "fields": [
+            #     {
+            #         "type": "mrkdwn",
+            #         "value": "*" +  + "*",
+            #         "short": False
+            #     },
                 # {
                 #     "type": "mrkdwn",
                 #     "value": "*DateTime:*\n" + data['datetime'],
-                #     "short": False
+                #     "short": True
                 # },
                 # {
                 #     "type": "mrkdwn",
                 #     "value": "*Event:*\n" + event,
                 #     "short": True
                 # }
-            ]
+            # ]
         }],
     }))
 
