@@ -1,8 +1,10 @@
 - include: CentOS.yml
   when: "ansible_os_family == 'RedHat'"
+  tags: notification
 
 - include: Ubuntu.yml
   when: "ansible_os_family == 'Debian'"
+  tags: notification
 
 # 標準出力をSlackに通知するシェルを配置する
 - name: "{{ script_dir }}/stdout_to_slack.sh set"
@@ -12,3 +14,4 @@
     owner: root
     group: root
     mode: 0755
+  tags: notification

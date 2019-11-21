@@ -5,6 +5,7 @@
     owner: root
     group: root
     mode: 0755
+  tags: notification
 
 #- name: to mail required packages install
 #  package:
@@ -21,6 +22,7 @@
     owner: root
     group: root
     mode: 0644
+  tags: notification
 
 - name: apt install pip3
   apt:
@@ -28,11 +30,13 @@
     update_cache: yes
     cache_valid_time: 3600
   when: "ansible_os_family == 'Debian'"
+  tags: notification
 
 - name: "{{ mail2slack_pip_path }} install requirements package"
   shell: "{{ mail2slack_pip_path }} install -r requirements.txt"
   args:
     chdir: "{{ mail2slack_deploy_path }}"
+  tags: notification
 
 - name: mail2slack conf set
   template:
@@ -41,6 +45,7 @@
     owner: root
     group: root
     mode: 0644
+  tags: notification
 
 - name: mail2slack.sh set
   template:
@@ -49,6 +54,7 @@
     owner: root
     group: root
     mode: 0755
+  tags: notification
 
 - name: kick_mail2slack.sh set
   template:
@@ -57,6 +63,7 @@
     owner: root
     group: root
     mode: 0755
+  tags: notification
 
 - name: mail2slack py set
   template:
@@ -65,3 +72,4 @@
     owner: root
     group: root
     mode: 0755
+  tags: notification
