@@ -10,3 +10,13 @@
   notify:
     - enable ufw
     - restart ufw
+
+# ufwのログをsyslogとかmessageに出さないようにする
+- name: ufw log dest setting
+  become: yes
+  become_user: root
+  lineinfile:
+    path: /etc/rsyslog.d/20-ufw.conf
+    state: present
+    regexp: '^#& stop'
+    line: '& stop'
