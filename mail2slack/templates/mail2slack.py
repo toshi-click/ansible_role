@@ -21,6 +21,7 @@ def get_datetime_from_email(message):
     datetime = re.sub(r'^-Datetime\s*:\s*', '', datetime)
     return datetime
 
+
 def get_event_from_email(message):
     body = get_body_from_email(message).split("\n")
     event = [line for line in body if line.startswith('-Event')][0]
@@ -69,7 +70,7 @@ def parse_email(data):
     # event = get_event_from_email(message)
     if body:
         if len(body) > 10:
-            body = body
+            body = "文字数：" + len(body) + "本文：" + str(body)
         else:
             body = data
     else:
@@ -128,23 +129,22 @@ def post_to_slack(data):
             #         "value": "*" +  + "*",
             #         "short": False
             #     },
-                # {
-                #     "type": "mrkdwn",
-                #     "value": "*DateTime:*\n" + data['datetime'],
-                #     "short": True
-                # },
-                # {
-                #     "type": "mrkdwn",
-                #     "value": "*Event:*\n" + event,
-                #     "short": True
-                # }
+            # {
+            #     "type": "mrkdwn",
+            #     "value": "*DateTime:*\n" + data['datetime'],
+            #     "short": True
+            # },
+            # {
+            #     "type": "mrkdwn",
+            #     "value": "*Event:*\n" + event,
+            #     "short": True
+            # }
             # ]
         }],
     }))
 
 
 if __name__ == '__main__':
-
     # Load configuration from file`1
     config_file = configparser.ConfigParser()
     config_file.read('{{ mail2slack_config_file_path }}')
