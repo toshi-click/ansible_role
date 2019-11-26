@@ -68,13 +68,13 @@ def parse_email(data):
     # datetime = get_datetime_from_email(message)
     body = get_body_from_email(message).split("\n")
     # event = get_event_from_email(message)
-    if body:
-        if len(body) > 10:
-            body = "文字数：" + len(body) + "本文：" + str(body)
-        else:
-            body = data
-    else:
-        body = data
+    # if body:
+    #     if len(body) > 10:
+    #         body = "文字数：" + len(body) + "本文：" + str(body)
+    #     else:
+    #         body = data
+    # else:
+    body = data
 
     return {
         "subject": subject,
