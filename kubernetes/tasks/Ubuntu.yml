@@ -220,7 +220,7 @@
     get_url:
       url: "{{ kubernetes_helm_download_url }}"
       dest: /usr/local/src/
-      sha256sum: 38614a665859c0f01c9c1d84fa9a5027364f936814d1e47839b05327e400bf55
+      sha256sum: "{{ kubernetes_helm_sha256sum }}"
 
   - name: "create directory /usr/local/src/helm"
     file:

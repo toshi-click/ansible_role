@@ -22,5 +22,6 @@ kubernetes_execute_users:
   - toshi
 
 # https://github.com/helm/helm/releases
-kubernetes_helm_version: 2.14.3
+kubernetes_helm_version: 3.0.0
 kubernetes_helm_download_url: https://get.helm.sh/helm-v{{ kubernetes_helm_version }}-linux-amd64.tar.gz
+kubernetes_helm_sha256sum: 10e1fdcca263062b1d7b2cb93a924be1ef3dd6c381263d8151dd1a20a3d8c0dc
