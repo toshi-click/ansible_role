@@ -29,7 +29,7 @@
     executable: /usr/sbin/td-agent-gem
     name: "{{ item.name }}"
     state: present
-    user_install: yes
+    user_install: no
   with_items: '{{ fluentd_plugin }}'
   tags: fluentd
 
