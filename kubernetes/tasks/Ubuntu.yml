@@ -193,15 +193,35 @@
     with_items:
       - "{{ kubernetes_execute_users }}"
 
-  # Flannelのインストール
+    # Flannelのインストール
+  - name: Download the Flannel yaml
+    get_url:
+      url: "https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
+      dest: "/usr/local/src/kube-flannel.yml"
+
+  - name: "virtualBox等の場合にyamlを書き換える"
+    replace:
+      dest: /usr/local/src/kube-flannel.yml
+      regexp: '/opt/bin/flanneld'
+      replace: '[ "/opt/bin/flanneld", "--ip-masq", "--kube-subnet-mgr", "--iface=enp0s8" ]'
+    when:
+      - kubernetes_flannel_flag
+      - kubernetes_virtualbox_flag
+
   - name: kubernetes install Flannel
-    shell: "kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml"
+    shell: "kubectl apply -f /usr/local/src/kube-flannel.yml"
     register: kubernetes_flannel_install_register
     check_mode: no
     changed_when: false
-    when: kubernetes_flannel_flag
+    when:
+      - kubernetes_flannel_flag
     environment:
-      KUBECONFIG: /etc/kubernetes/admin.conf
+      KUBECONFIG: /etc/kubernetes/kubelet.conf
+
+  - name: delete Flannel yaml
+    file:
+      path: "/usr/local/src/kube-flannel.yml"
+      state: absent
 
   # Calicoのインストール
   - name: kubernetes install Calico
