@@ -164,9 +164,9 @@
       mode: 0755
       state: directory
 
-  - name: Allow root users to use kubectl /etc/kubernetes/kubelet.conf copy
+  - name: Allow root users to use kubectl /etc/kubernetes/admin.conf copy
     copy:
-      src: /etc/kubernetes/kubelet.conf
+      src: /etc/kubernetes/admin.conf
       dest: "/root/.kube/config"
       remote_src: true
       owner: root
@@ -183,9 +183,9 @@
     with_items:
       - "{{ kubernetes_execute_users }}"
 
-  - name: Allow users to use kubectl /etc/kubernetes/kubelet.conf copy
+  - name: Allow users to use kubectl /etc/kubernetes/admin.conf copy
     copy:
-      src: /etc/kubernetes/kubelet.conf
+      src: /etc/kubernetes/admin.conf
       dest: "/home/{{ item }}/.kube/config"
       remote_src: true
       owner: "{{ item }}"
@@ -233,7 +233,7 @@
     changed_when: false
     when: kubernetes_calico_flag
     environment:
-      KUBECONFIG: /etc/kubernetes/kubelet.conf
+      KUBECONFIG: /etc/kubernetes/admin.conf
 
   # helm
   - name: get helm download
