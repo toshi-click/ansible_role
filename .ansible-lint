@@ -15,4 +15,6 @@ skip_list:
 - '401'
 # shellでパイプの途中でエラー起きてもいい [E306] Shells that use pipes should set the pipefail option
 - '306'
+# ループの書き方で怒られるのヤダ [E104] Found a bare variable 'hoge' used in a 'with_items' loop. You should use the full variable syntax ('{{hoge}}')
+- '104'
 verbosity: 1
