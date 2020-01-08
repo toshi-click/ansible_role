@@ -5,4 +5,4 @@
     state: present
     reload: yes
   when: sysctl_setting|length > 0
-  with_items: sysctl_setting
+  with_items: {{ sysctl_setting }}

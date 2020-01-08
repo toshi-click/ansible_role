@@ -3,4 +3,4 @@
 - name: postfix install
   package:
     name: postfix
-    state: latest
+    state: present

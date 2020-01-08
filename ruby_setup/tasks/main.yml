@@ -1,6 +1,7 @@
 # CentOS向け設定
 - block:
-    - yum:
+    - name: add ruby require package
+      yum:
         name: "{{ packages }}"
         state: present
       vars:
@@ -22,7 +23,8 @@
 
 # Debian・Ubuntu向け設定
 - block:
-    - apt:
+    - name: add ruby require package
+      apt:
         pkg: "{{ packages }}"
         state: present
         update_cache: yes

@@ -3,4 +3,4 @@
 - name: jq install
   package:
     name: jq
-    state: latest
+    state: present

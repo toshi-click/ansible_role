@@ -3,17 +3,17 @@
 - name: gcc install
   package:
     name: gcc
-    state: latest
+    state: present
 
 - name: make install
   package:
     name: make
-    state: latest
+    state: present
 
 - name: dkms install
   package:
     name: dkms
-    state: latest
+    state: present
 
 - name: Add APT key for Oracle VirtualBox repository 1
   apt_key:

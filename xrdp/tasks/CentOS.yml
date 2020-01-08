@@ -2,7 +2,7 @@
 - name: xrdp install
   package:
     name: xrdp
-    state: latest
+    state: present
   notify:
     - enable xrdp
     - restart xrdp

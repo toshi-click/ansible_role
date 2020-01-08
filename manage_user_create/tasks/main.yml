@@ -36,7 +36,7 @@
 - name: authorized_keys
   template:
     src: "authorized_keys.j2"
-    dest: /home/{{manage_user.name}}/.ssh/authorized_keys
+    dest: "/home/{{ manage_user.name }}/.ssh/authorized_keys"
     owner: "{{ manage_user.name }}"
     group: "{{ manage_user.group }}"
     mode: 0600
@@ -44,7 +44,7 @@
 - name: set profile
   template:
     src: "profile"
-    dest: /home/{{manage_user.name}}/.profile
+    dest: "/home/{{ manage_user.name }}/.profile"
     owner: "{{ manage_user.name }}"
     group: "{{ manage_user.group }}"
     mode: 0644
@@ -52,7 +52,7 @@
 - name: set bashrc
   template:
     src: "bashrc"
-    dest: /home/{{manage_user.name}}/.bashrc
+    dest: "/home/{{ manage_user.name }}/.bashrc"
     owner: "{{ manage_user.name }}"
     group: "{{ manage_user.group }}"
     mode: 0644

@@ -29,7 +29,7 @@
 - name: authorized_keys
   template:
     src: "authorized_keys.j2"
-    dest: /home/{{ansible_user_name}}/.ssh/authorized_keys
+    dest: "/home/{{ ansible_user_name }}/.ssh/authorized_keys"
     owner: "{{ ansible_user_name }}"
     group: "{{ ansible_user_group }}"
     mode: 0600

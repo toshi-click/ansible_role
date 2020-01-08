@@ -1,7 +1,7 @@
 - name: iptables-services install
   package:
     name: iptables-services
-    state: latest
+    state: present
 
 - name: firewalld install
   package:

@@ -17,7 +17,7 @@
 - name: Install mackerel-agent
   apt:
     name: mackerel-agent
-    state: latest
+    state: present
     update_cache: yes
     force: yes
     cache_valid_time: 3600
@@ -27,7 +27,7 @@
 - name: Install mackerel-agent-plugins
   apt:
     name: mackerel-agent-plugins
-    state: latest
+    state: present
     update_cache: yes
     cache_valid_time: 3600
     force: yes
@@ -38,7 +38,7 @@
 - name: Install mackerel-check-plugins
   apt:
     name: mackerel-check-plugins
-    state: latest
+    state: present
     update_cache: yes
     cache_valid_time: 3600
     force: yes

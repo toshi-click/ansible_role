@@ -3,20 +3,20 @@
   - name: "install language-pack-ja-base"
     package:
       name: language-pack-ja-base
-      state: latest
+      state: present
     when: ansible_distribution == 'Ubuntu'
 #    when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
 
   - name: "install language-pack-ja"
     package:
       name: language-pack-ja
-      state: latest
+      state: present
     when: ansible_distribution == 'Ubuntu'
 
   - name: "install ibus-mozc"
     package:
       name: ibus-mozc
-      state: latest
+      state: present
     when: ansible_distribution == 'Ubuntu'
 
   - name: "set-locale"
@@ -25,13 +25,13 @@
   - name: manpages-ja-dev install
     package:
       name: manpages-ja-dev
-      state: latest
+      state: present
     when: ansible_distribution == 'Ubuntu'
 
   - name: manpages-ja install
     package:
       name: manpages-ja
-      state: latest
+      state: present
     when: ansible_distribution == 'Ubuntu'
 
   # Ubuntu Japanese Teamリポジトリを追加する
@@ -65,12 +65,12 @@
   - name: "install ibus-kkc"
     package:
       name: "ibus-kkc"
-      state: latest
+      state: present
 
   - name: "install vlgothic-*"
     package:
       name: "vlgothic-*"
-      state: latest
+      state: present
 
   # 日本語の設定
   # - name: "set-locale"
