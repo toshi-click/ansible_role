@@ -1,0 +1,17 @@
+[Unit]
+Description=Alertmanager for Prometheus
+Documentation=https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/
+After=network-online.target prometheus.service
+Wants=network-online.target
+
+[Service]
+ExecStart={{ alertmanager_bin}} --config.file={{ alertmanager_conf_file }} --storage.path=/var/lib/prometheus/alertmanager
+ExecStop=/bin/kill -TERM ${MAINPID}
+ExecReload=/bin/kill -HUP $MAINPID
+TimeoutStopSec=20s
+SendSIGKILL=no
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target

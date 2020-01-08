@@ -1,0 +1,129 @@
+#--------------------------------------------------#
+# モニタリングデータを配置用ディレクトリを作成
+#--------------------------------------------------#
+- name: make directory /var/lib/prometheus
+  file:
+    path: /var/lib/prometheus
+    state: directory
+    owner: root
+    group: root
+    mode: '0766'
+
+- name: "create directory prometheus conf dir"
+  file:
+    path: "{{ prometheus_conf_dir }}"
+    state: directory
+    mode: 0755
+
+# prometheusのインストールを確認する
+- name: Confirm installation of prometheus
+  stat:
+    path: "{{ prometheus_dir }}-{{ prometheus_version }}"
+  register: prometheus_state
+# 同じprometheusバージョンがインストール済みだったらやらない設定
+- block:
+    - name: get prometheus
+      get_url:
+        url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+        dest: "{{ prometheus_src_dir }}/prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+        mode: 0644
+      register: result_prometheus_get_url
+    # ダウンロードファイルを確認する
+    - name: Check the prometheus download file
+      stat:
+        path: "{{ result_prometheus_get_url.dest }}"
+      register: archive_prometheus_file_state
+
+    # ダウンロードファイルを解凍する
+    - name: Unzip the prometheus download file
+      shell: "tar zxf prometheus-{{ prometheus_version }}.linux-amd64.tar.gz"
+      args:
+        chdir: "{{ prometheus_src_dir }}"
+      when: archive_prometheus_file_state.stat.exists
+
+    - name: "mv prometheus rename"
+      shell: "cp -rp prometheus-{{ prometheus_version }}.linux-amd64 {{ prometheus_dir }}-{{ prometheus_version }}"
+      args:
+        chdir: "{{ prometheus_src_dir }}"
+      when: archive_prometheus_file_state.stat.exists
+
+    - name: "make link"
+      file:
+        src: "{{ prometheus_dir }}-{{ prometheus_version }}"
+        dest: "{{ prometheus_dir }}"
+        state: link
+
+  # 同じprometheusバージョンインストール済みだったらやらない範囲終わり
+  when: not prometheus_state.stat.exists
+
+- name: prometheus.service set
+  template:
+    src: prometheus.service
+    dest: /etc/systemd/system/prometheus.service
+    owner: root
+    group: root
+    mode: 0644
+
+# alertmanagerのインストールを確認する
+- name: Confirm installation of alertmanager
+  stat:
+    path: "{{ alertmanager_src_dir }}/alertmanager-{{ alertmanager_version }}.linux-amd64/alertmanager"
+  register: alertmanager_state
+# 同じalertmanagerバージョンがインストール済みだったらやらない設定
+- block:
+    - name: get alertmanager
+      get_url:
+        url: "https://github.com/prometheus/alertmanager/releases/download/v{{ alertmanager_version }}/alertmanager-{{ alertmanager_version }}.linux-amd64.tar.gz"
+        dest: "{{ alertmanager_src_dir }}/alertmanager-{{ alertmanager_version }}.linux-amd64.tar.gz"
+        mode: 0644
+      register: result_alertmanager_get_url
+    # ダウンロードファイルを確認する
+    - name: Check the alertmanager download file
+      stat:
+        path: "{{ result_alertmanager_get_url.dest }}"
+      register: archive_alertmanager_file_state
+
+    # ダウンロードファイルを解凍する
+    - name: Unzip the alertmanager download file
+      shell: "tar zxf alertmanager-{{ alertmanager_version }}.linux-amd64.tar.gz"
+      args:
+        chdir: "{{ alertmanager_src_dir }}"
+      when: archive_alertmanager_file_state.stat.exists
+
+    - name: "cp alertmanager bin file"
+      shell: "cp -rp alertmanager-{{ alertmanager_version }}.linux-amd64/alertmanager {{ alertmanager_bin}}"
+      args:
+        chdir: "{{ alertmanager_src_dir }}"
+      when: archive_alertmanager_file_state.stat.exists
+
+  # 同じalertmanagerバージョンインストール済みだったらやらない範囲終わり
+  when: not alertmanager_state.stat.exists
+
+- name: make directory /var/lib/prometheus/alertmanager
+  file:
+    path: /var/lib/prometheus/alertmanager
+    state: directory
+    owner: root
+    group: root
+    mode: '0766'
+
+- name: default alert config set
+  copy:
+    src: etc/prometheus/alert_rules.yml
+    dest: "{{ prometheus_conf_dir }}/alert_rules.yml"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: alertmanager.service set
+  template:
+    src: alertmanager.service
+    dest: /etc/systemd/system/alertmanager.service
+    owner: root
+    group: root
+    mode: 0644
+
+# systemdにconfigsを読み直すように強制する
+- name: just force systemd to reread configs
+  systemd:
+    daemon_reload: yes

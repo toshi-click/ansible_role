@@ -1,0 +1,23 @@
+- name: grafana.repo set
+  template:
+    src: grafana.repo
+    dest: /etc/yum.repos.d/grafana.repo
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Install grafana packages
+  yum:
+    name: grafana
+    state: present
+
+# systemdにconfigsを読み直すように強制する
+- name: just force systemd to reread configs
+  systemd:
+    daemon_reload: yes
+
+- name: grafana service state
+  service:
+    name: grafana-server
+    state: restarted
+    enabled: yes

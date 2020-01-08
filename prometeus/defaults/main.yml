@@ -1,0 +1,12 @@
+---
+prometheus_version: 2.10.0
+prometheus_src_dir: /usr/local/src
+prometheus_dir: /usr/local/prometheus-server
+prometheus_conf_dir: /etc/prometheus
+prometheus_conf_file: /etc/prometheus/prometheus.yml
+
+alertmanager_version: 0.17.0
+alertmanager_src_dir: /usr/local/src
+alertmanager_bin: /usr/local/bin/alertmanager
+
+alertmanager_conf_file: /etc/prometheus/alertmanager.yml

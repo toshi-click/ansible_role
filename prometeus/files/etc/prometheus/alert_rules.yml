@@ -1,0 +1,135 @@
+groups:
+- name: fluentd
+  rules:
+    - alert: FluentdProcessDown
+      expr: up{job="fluentd"} == 0
+      for: 5s
+
+    - alert: OutputRetryCountOver
+      expr: fluentd_output_status_retry_count{job='node'} == 7
+      for: 1s
+
+
+- name: node_exporter
+  rules:
+    # alert: アラート名
+    - alert: InstanceDown
+      # expr: alert push の閾値
+      # インスタンスダウン (今回の設定では node_exporter, apache_exporter, blackbox_exporter が
+      # 起動されていないことと同値) を条件にしています
+      expr: up == 0
+      # for: alert push の expr の時間。
+      # インスタンスダウンした状態が 5 分間続いた時に、alert push されます
+      for: 5m
+      labels:
+        severity: critical
+      # annotations: アラートの通知内容
+      annotations:
+        summary: "Instance {{ $labels.instance }} down"
+        description: "{{ $labels.instance }} has been down for more than 5 minutes."
+
+    - alert: cpu_used
+      # CPU 使用率が 90% を超えた時を条件にしています
+      expr: 100 * (1 - avg(rate(node_cpu{job='node',mode='idle'}[5m])) BY (instance)) > 90
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "cpu {{ $labels.instance }} used over 90%"
+        description: "cpu of {{ $labels.instance }} has been used over 90% for more than 5 minutes."
+
+    - alert: memory_used
+      # メモリ使用量が 90% を超えた時を条件にしています
+      expr: 100 * (1 - node_memory_MemFree{job='node'} / node_memory_MemTotal{job='node'}) > 90
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "memory {{ $labels.instance }} used over 90%"
+        description: "memory of {{ $labels.instance }} has been used over 90% for more than 5 minutes."
+
+    # Host network interfaces are probably receiving too much data (> 100 MB/s)
+    - alert: UnusualNetworkThroughputIn
+      expr: sum by (instance) (irate(node_network_receive_bytes_total[2m])) / 1024 / 1024 > 100
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Unusual network throughput in (instance {{ $labels.instance }})"
+        description: "Host network interfaces are probably receiving too much data (> 100 MB/s)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+    # Host network interfaces are probably sending too much data (> 100 MB/s)
+    - alert: UnusualNetworkThroughputOut
+      expr: sum by (instance) (irate(node_network_transmit_bytes_total[2m])) / 1024 / 1024 > 100
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Unusual network throughput out (instance {{ $labels.instance }})"
+        description: "Host network interfaces are probably sending too much data (> 100 MB/s)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+    # Disk is almost full (< 10% left)
+    - alert: OutOfDiskSpace
+      expr: node_filesystem_free_bytes{mountpoint ="/rootfs"} / node_filesystem_size_bytes{mountpoint ="/rootfs"} * 100 < 10
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Out of disk space (instance {{ $labels.instance }})"
+        description: "Disk is almost full (< 10% left)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+    # Disk will fill in 4 hours at current write rate
+    - alert: DiskWillFillIn4Hours
+      expr: predict_linear(node_filesystem_free_bytes[1h], 4 * 3600) < 0
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Disk will fill in 4 hours (instance {{ $labels.instance }})"
+        description: "Disk will fill in 4 hours at current write rate\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+    # Disk is almost running out of available inodes (< 10% left)
+    - alert: OutOfInodes
+      expr: node_filesystem_files_free{mountpoint ="/rootfs"} / node_filesystem_files{mountpoint ="/rootfs"} * 100 < 10
+      for: 5m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Out of inodes (instance {{ $labels.instance }})"
+        description: "Disk is almost running out of available inodes (< 10% left)\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
+
+# アラートのグループは複数指定できます
+- name: apache_exporter
+  rules:
+    - alert: apache_workers
+      # この設定では Apache の worker プロセスが 30 を超えた時を条件にしています
+      expr: apache_workers{job="apache",state="busy"} > 30
+      for: 5m
+      labels:
+        severity: critical
+      annotations:
+        summary: "apache {{ $labels.instance }} workers over 30"
+        description: "apache server {{ $labels.instance }} has been used over 30 workers for more than 5 minutes."
+
+- name: blackbox_exporter
+  rules:
+    - alert: http_status_200
+      # この設定では返ってきた http ステータスコードが 200 以外の時を条件にしています(外形監視)
+      expr: probe_http_status_code{job='http_200'} != 200
+      for: 10s
+      labels:
+        severity: critical
+      annotations:
+        summary: "{{ $labels.instance }}: http request not return 200"
+        description: "{{ $labels.instance }} http request not return 200 for more than 10 seconds."
+
+- name: prometheus
+  rules:
+    - alert: PrometheusNotConnectedToAlertmanager
+      expr: prometheus_notifications_alertmanagers_discovered < 1
+      for: 5m
+      labels:
+        severity: error
+      annotations:
+        summary: "Prometheus not connected to alertmanager (instance {{ $labels.instance }})"
+        description: "Prometheus cannot connect the alertmanager\n  VALUE = {{ $value }}\n  LABELS: {{ $labels }}"
