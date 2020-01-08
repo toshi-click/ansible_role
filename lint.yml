@@ -1,0 +1,49 @@
+# 新しいroleを作った場合はこのymlに追記する
+- hosts: all
+  become: true
+  become_user: root
+  roles:
+    - { role: "add_package_repo"}
+    - { role: "all_package_update-php"}
+    - { role: "ansible"}
+    - { role: "ansible_user_create"}
+    - { role: "auto_package_upgrade"}
+    - { role: "chrome"}
+    - { role: "create_dir"}
+    - { role: "dev_tool_install"}
+    - { role: "docker"}
+    - { role: "firewall"}
+    - { role: "fluentd"}
+    - { role: "gitlab_runner"}
+    - { role: "hostname"}
+    - { role: "hosts"}
+    - { role: "kubernetes"}
+    - { role: "kvm"}
+    - { role: "locale"}
+    - { role: "mac/roles/config"}
+    - { role: "mac/roles/homebrew"}
+    - { role: "mac/roles/homebrew_cask"}
+    - { role: "mac/roles/mackerel"}
+    - { role: "mac/roles/packetix_vpn_client"}
+    - { role: "mackerel"}
+    - { role: "mail2slack"}
+    - { role: "manage_user_create"}
+    - { role: "network_restart"}
+    - { role: "node_exporter"}
+    - { role: "ntp"}
+    - { role: "postfix"}
+    - { role: "root_user_password"}
+    - { role: "rootkit_hunter"}
+    - { role: "ruby_setup"}
+    - { role: "samba"}
+    - { role: "secure"}
+    - { role: "selinux"}
+    - { role: "ssh_mail_send"}
+    - { role: "sshd"}
+    - { role: "stdout_to_slack_script"}
+    - { role: "sysctl"}
+    - { role: "timezone"}
+    - { role: "ufw"}
+    - { role: "virtualbox"}
+    - { role: "wordpress"}
+    - { role: "xrdp"}

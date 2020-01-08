@@ -1,8 +1,10 @@
 - include: CentOS.yml
   when: "ansible_os_family == 'RedHat'"
+  tags: docker
 
 - include: Ubuntu.yml
-  when: ansible_distribution == "Ubuntu"
+  when: "ansible_os_family == 'Debian'"
+  tags: docker
 
 - name: put /etc/docker/daemon.json
   template:
@@ -11,3 +13,4 @@
     owner: root
     group: root
     mode: 0644
+  tags: docker

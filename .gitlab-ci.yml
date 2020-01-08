@@ -12,13 +12,13 @@ cache:
 ## filelint 改行コードを見たりする
 filelint:
   stage: lint
-  image: toshiclick/gitlab-ci-ansible-centos
+  image: toshiclick/ci-ansible
   script:
   - filelint .
 
 ansiblelint:
   stage: lint
-  image: toshiclick/gitlab-ci-ansible-centos
+  image: toshiclick/ci-ansible
   script:
     - pip install ansible-lint
-    - ansible-lint ./ -c .circleci/.ansible-lint
+    - ansible-lint lint.yml -c .ansible-lint
