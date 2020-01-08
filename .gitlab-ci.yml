@@ -4,17 +4,23 @@
 stages:
   - lint
 
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  # to avoid this problem:
+  # UnicodeDecodeError: 'ascii' codec can't decode byte 0xe3 in position 140: ordinal not in range(128)
+  LANG: ja_JP.UTF-8
+
 cache:
   # ブランチ毎にキャッシュする設定
   key: "$CI_COMMIT_REF_NAME"
   untracked: true
 
 ## filelint 改行コードを見たりする
-filelint:
-  stage: lint
-  image: toshiclick/ci-ansible
-  script:
-  - filelint .
+#filelint:
+#  stage: lint
+#  image: toshiclick/ci-ansible
+#  script:
+#  - filelint .
 
 ansiblelint:
   stage: lint
