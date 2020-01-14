@@ -46,3 +46,5 @@ ufw_state: enabled
 ufw_logging: "off"
 # always reset the firewall
 ufw_reset: yes
+
+docker_install: false
