@@ -21,3 +21,9 @@
   ufw:
     state: reloaded
   when: ufw_state == 'enabled'
+
+- name: restart ubuntu iptables
+  service:
+    name: netfilter-persistent
+    state: restarted
+    enabled: yes
