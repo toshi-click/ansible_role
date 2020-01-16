@@ -74,6 +74,7 @@
     owner: root
     group: root
     mode: 0600
+  notify: restart ubuntu iptables
 
 # ip6tables
 - name: ip6tables is configured
@@ -84,3 +85,18 @@
     group: root
     mode: 0600
   notify: restart ubuntu iptables
+
+- name: "create directory iptables log"
+  file:
+    path: "/var/log/iptables"
+    state: directory
+    mode: 0644
+
+- name: rsyslog is configured
+  template:
+    src: "etc/rsyslog.d/35-iptables.conf"
+    dest: "/etc/rsyslog.d/35-iptables.conf"
+    owner: root
+    group: root
+    mode: 0600
+  notify: restart rsyslog restart

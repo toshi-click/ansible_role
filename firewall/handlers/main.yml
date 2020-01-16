@@ -27,3 +27,8 @@
     name: netfilter-persistent
     state: restarted
     enabled: yes
+
+- name: restart rsyslog restart
+  service:
+    name: rsyslog
+    state: restarted
