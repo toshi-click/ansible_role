@@ -48,3 +48,9 @@ ufw_logging: "off"
 ufw_reset: yes
 
 docker_install: false
+
+ip4tables_rules:
+  - { rule: "-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT" , comment: "ssh rule" }
+
+ip6tables_rules:
+  - { rule: "-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT" , comment: "ssh rule" }
