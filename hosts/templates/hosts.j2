@@ -9,8 +9,18 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 
-{% if hosts.etc_hosts_setting != '' %}
+{% if hosts.etc_hosts_setting is defined %}
+{% if hosts.etc_hosts_setting|length > 0 %}
 {% for item in hosts.etc_hosts_setting %}
 {{ item.ip }}    {{ item.name }}
 {% endfor %}
+{% endif %}
+{% endif %}
+
+{% if hosts_setting is defined %}
+{% if hosts_setting|length > 0 %}
+{% for item in hosts_setting %}
+{{ item.ip }}    {{ item.name }}
+{% endfor %}
+{% endif %}
 {% endif %}

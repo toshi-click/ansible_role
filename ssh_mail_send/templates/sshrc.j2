@@ -1,3 +1,4 @@
+{% if ssh_mail_send is defined %}
 {% if ssh_mail_send == "true" %}
 SOURCE_IP=${SSH_CLIENT%% *}
 # リストと比較して信頼していないIPからならメール送付
@@ -9,4 +10,5 @@ do
 done < {{ ssh_mail_send_trust_list_file }}
 
 echo "\"$USER\" has logged in from $SSH_CLIENT at `date +"%Y/%m/%d %p %I:%M:%S"` to $HOSTNAME " | mail -s "$HOSTNAME sshd login alert" -r root@"$HOSTNAME" root
+{% endif %}
 {% endif %}
