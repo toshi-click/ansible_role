@@ -1,5 +1,11 @@
 # Debian・Ubuntu向け設定
 - block:
+  - name: open ssh server install
+    apt:
+      name: openssh-server
+      update_cache: yes
+      cache_valid_time: 3600
+
   # sshd
   - name: sshd is configured
     notify:
