@@ -62,10 +62,14 @@
     mode: 0644
   notify: reload ufw
 
-- name: "delete /etc/ufw/after.rules"
-  file:
-    path: "/etc/ufw/after.rules"
-    state: absent
+- name: Configuring after.rules for docker
+  template:
+    src: etc/ufw/after.rules
+    dest: /etc/ufw/after.rules
+    owner: root
+    group: root
+    mode: 0644
+  notify: reload ufw
 
 - name: iptables-persistent absent
   package:
