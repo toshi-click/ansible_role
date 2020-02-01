@@ -70,28 +70,3 @@
     group: root
     mode: 0644
   notify: reload ufw
-
-- name: iptables-persistent absent
-  package:
-    name: iptables-persistent
-    state: absent
-
-- name: "delete /etc/iptables/rules.v4"
-  file:
-    path: "/etc/iptables/rules.v4"
-    state: absent
-
-- name: "delete /etc/iptables/rules.v6"
-  file:
-    path: "/etc/iptables/rules.v6"
-    state: absent
-
-- name: "delete /var/log/iptables"
-  file:
-    path: "/var/log/iptables"
-    state: absent
-
-- name: "delete /etc/rsyslog.d/35-iptables.conf"
-  file:
-    path: "/etc/rsyslog.d/35-iptables.conf"
-    state: absent
