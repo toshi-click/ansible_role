@@ -9,8 +9,8 @@
   # sshd
   - name: sshd is configured
     notify:
-      - restart sshd
-      - enable sshd
+      - restart ssh
+      - enable ssh
     template:
       src: "ubuntu_sshd_config"
       dest: "/etc/ssh/sshd_config"

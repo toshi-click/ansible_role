@@ -7,3 +7,14 @@
   service:
     name: sshd
     enabled: yes
+
+- name: restart ssh
+  service:
+    name: ssh
+    state: restarted
+
+- name: enable ssh
+  service:
+    name: ssh
+    enabled: yes
+

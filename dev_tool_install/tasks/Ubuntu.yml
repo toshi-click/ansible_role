@@ -1,33 +1,26 @@
 ---
-- name: mailutils install
+# パッケージインストール-----------------------------------------------------------------------------------------
+- name: Install common dev tool packages
   apt:
-    pkg: mailutils
+    name:
+      - wget
+      - tree
+      - git
+      - sudo
+      - net-tools
+      - htop
+      - bash-completion
+      - vim
+      - curl
+      - zip
+      - unzip
+      - net-tools
+      - mailutils
+      - iproute2
+      - iputils-ping
+      - nmap
+      - telnet
     state: present
     update_cache: yes
     cache_valid_time: 3600
   tags: dev_tool_install
-
-- name: iproute2 install
-  apt:
-    pkg: iproute2
-    state: present
-    update_cache: yes
-    cache_valid_time: 3600
-  tags: dev_tool_install
-
-- name: iputils-ping install
-  apt:
-    pkg: iputils-ping
-    state: present
-    update_cache: yes
-    cache_valid_time: 3600
-  tags: dev_tool_install
-
-- name: nmap install
-  apt:
-    pkg: nmap
-    state: present
-    update_cache: yes
-    cache_valid_time: 3600
-  tags: dev_tool_install
-#  when: ansible_distribution == 'Ubuntu'
