@@ -64,7 +64,7 @@
           args:
             chdir: "{{ node_exporter_src_dir }}"
           when:
-            - archive_node_exporter_file_state.stat.exists
+            - archive_node_exporter_armv7_file_state.stat.exists
 
       when: ansible_architecture == "armv7l"
   # 同じprometheusバージョンインストール済みだったらやらない範囲終わり
