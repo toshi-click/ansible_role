@@ -1,11 +1,11 @@
 - name: set Prometheus apt key
   apt_key:
     url: "https://s3-eu-west-1.amazonaws.com/deb.robustperception.io/41EFC99D.gpg"
-    state: present
+    state: absent
 
 - name: install prometheus-node-exporter
   apt:
     pkg: prometheus-node-exporter
-    state: present
+    state: absent
     update_cache: yes
     cache_valid_time: 3600
