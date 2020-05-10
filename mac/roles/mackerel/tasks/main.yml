@@ -1,5 +1,0 @@
----
-- name: homebrew mackerel packages install
-  homebrew:
-    name: 'mackerelio/mackerel-agent/mackerel-agent'
-    state: 'present'

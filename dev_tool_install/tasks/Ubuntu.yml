@@ -20,6 +20,12 @@
       - iputils-ping
       - nmap
       - telnet
+      - iftop
+      - bmon
+      - iptraf
+      - iptraf-ng
+      - sysstat
+      - iotop
     state: present
     update_cache: yes
     cache_valid_time: 3600
