@@ -75,6 +75,15 @@
     group: td-agent
     mode: 0755
 
+- name: "create directory /etc/td-agent/config.d"
+  file:
+    path: "/etc/td-agent/config.d"
+    state: directory
+    owner: td-agent
+    group: td-agent
+    mode: 0755
+  tags: fluentd
+
 - name: custom fluentd Plugin set
   template:
     src: "filter_ngrep.rb"
